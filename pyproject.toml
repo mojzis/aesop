@@ -16,6 +16,7 @@ dev = [
     "introspy>=0.3.1",
     "madoqua>=0.1.0",
     "pycoati>=0.2.4",
+    "pytest>=9.1.1",
     "ruff>=0.16.6",
     "ty>=0.0.78",
     "ty-find>=0.4.5",
@@ -24,6 +25,10 @@ dev = [
 
 [project.scripts]
 build = "build.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
@@ -38,6 +43,9 @@ select = ["E", "F", "I", "UP", "B"]
 extend_check = [
     { name = "biston", cmd = "biston scan .", pass_files = false, timeout_s = 60, max_output_lines = 80 },
     { name = "zorilla", cmd = "zorilla check tests", pass_files = false, timeout_s = 30, max_output_lines = 80 },
+    # diffs the working tree against origin/main, walks ty's reference graph,
+    # runs only the tests that reach the changed symbols; whole suite when unsure.
+    { name = "gerenuk", cmd = "gerenuk run -- -q", pass_files = false, timeout_s = 120, max_output_lines = 120 },
 ]
 
 [tool.biston.scan]
