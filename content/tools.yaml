@@ -40,8 +40,11 @@
   accent: "#e5ff4a"
   tagline: Sniffs out tests that test nothing.
   reach_for_it: >
-    An agent just proudly delivered 40 green tests and you want to know how
-    many actually assert something.
+    Every commit. An agent just proudly delivered 40 green tests and you want
+    to know how many actually assert something. Eight fast syntactic rules —
+    no assertion, sleep, patch stacks — as a pre-commit hook. Says yes or no,
+    then gets out of the way. For the full ranked audit, see
+    [pycoati](../pycoati/).
   guide: uvx zorilla guide
   install: uvx zorilla
   category: guardrails
@@ -104,12 +107,13 @@
   name: pycoati
   animal: coati
   accent: "#a0522d"
-  tagline: Ranks the tests that are probably lying to you.
+  tagline: Tells your agent which tests to fix first.
   reach_for_it: >
-    The suite is green but you don't trust it — too many mocks, tests that
-    patch the thing they claim to test. pycoati walks the project with
-    tree-sitter, scores every test for suspicion, and hands your agent a
-    remediation ladder.
+    Every now and then, not every commit. The suite is green but you don't
+    trust it. Walks the whole suite, optionally runs pytest for durations and
+    coverage, scores every test for suspicion, and hands your agent a ranked
+    list plus a remediation ladder. For the per-commit gate, see
+    [zorilla](../zorilla/).
   guide: uvx pycoati guide
   install: uvx pycoati
   category: guardrails

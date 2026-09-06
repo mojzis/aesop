@@ -77,6 +77,8 @@ Every tool here teaches your agent itself — just say: run `uvx <tool> guide`.
 
 ## pycoati (resolved)
 
-**Tagline:** Ranks the tests that are probably lying to you.
+**Tagline:** Tells your agent which tests to fix first.
 
-**Reach for it when:** the suite is green but you don't trust it — too many mocks, tests that patch the thing they claim to test. Scores every test for suspicion, hands your agent a remediation ladder.
+**Reach for it when:** every now and then, not every commit. Walks the whole suite, optionally runs pytest, scores every test for suspicion, hands your agent a ranked list + remediation ladder.
+
+**vs zorilla:** zorilla = per-commit gate, 8 syntactic rules, instant, yes/no. pycoati = periodic audit, whole-suite stats, ranked, tells the agent where to start. Both pages cross-link.
