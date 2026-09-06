@@ -1,4 +1,4 @@
-# agentic-python
+# aesop
 
 Static portfolio site. Python + Jinja2 + Markdown, deployed to GitHub Pages.
 

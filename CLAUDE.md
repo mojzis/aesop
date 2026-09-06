@@ -1,4 +1,4 @@
-# agentic-python
+# aesop
 
 Static site: `content/` (YAML + Markdown) → `build/__main__.py` (Jinja2) → `site/`.
 

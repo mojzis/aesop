@@ -3,7 +3,7 @@ title: Hello World
 summary: Placeholder project to prove the pipeline works.
 date: 2026-09-06
 tags: [python, static-site]
-repo: https://github.com/mojzis/agentic-python
+repo: https://github.com/mojzis/aesop
 featured: true
 ---
 
