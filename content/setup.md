@@ -1,35 +1,57 @@
 # Toolbox integration prompt
 
-Integrate the aesop toolbox (https://mojzis.github.io/aesop/llms.txt) into this repo so it's used automatically where it should be, and documented where it shouldn't. Add ALL of the tools below as dev dependencies with `uv add --dev <tool>`, then call them via `uv run <tool>`. Each tool teaches you how to use itself — run `uv run <tool> guide` first and follow its conventions rather than guessing at flags. If a tool has no `guide` yet, fall back to `--help` and its README.
+Integrate the aesop toolbox (https://mojzis.github.io/aesop/llms.txt) into this repo so it's used automatically where it should be, and documented where it shouldn't. Each tool teaches you how to use itself — run `uv run <tool> guide` first and follow its conventions rather than guessing at flags. If a tool has no `guide` yet, fall back to `--help` and its README.
 
-## Every commit — the hook
+## 0. Install everything first
 
-1. **madoqua** — set it up as THE commit hook for this repo, replacing or consolidating whatever hook setup currently exists. Migrate any existing checks (lint, format, etc.) into its config so there's one hook, not two systems. Known trap: the shim `madoqua install` writes runs bare `madoqua`; if a commit fails with `madoqua: not found` or `cannot run ruff`, prepend `<repo>/.venv/bin` to PATH inside `hooks/pre-commit`.
+```
+uv add --dev madoqua gerenuk biston zorilla pycoati introspy ty-find ruff ty pytest
+```
 
-2. **gerenuk** — wire it INTO the madoqua hook so that on commit, only the tests impacted by the diff are run, not the whole suite. Verify the chain works end to end: make a small change, commit, confirm the right subset of tests ran. If the installed gerenuk has no impacted-tests command (`gerenuk --help`), leave it out of the hook, keep it as a dev dep for `gerenuk audit`, and say so.
+ruff and ty are madoqua's default fix/check steps; pytest is what gerenuk becomes. Call every tool as `uv run <tool>`. ty-find's binary is `tyf`. If the project is not an installable package, pytest needs `[tool.pytest.ini_options] pythonpath = ["."]`.
 
-3. **biston** — add it to the madoqua hook, no debate. Your only job is tuning its config for this repo (thresholds, ignored paths like generated code or migrations) so it's fast and quiet on a clean commit. If the current codebase already trips it, tune around the existing findings and list them for me instead of blocking commits.
+## 1. Every commit — the hook
 
-4. **zorilla** — add it to the madoqua hook, scoped to the tests directory. It is a fast syntactic linter (no assertion, sleep, patch stacks); it belongs in the per-commit gate. If existing tests trip it, tune or suppress per rule and list the findings for me.
+**madoqua** is THE commit hook. Replace or consolidate whatever hook setup exists; migrate existing checks (lint, format, typecheck) into its config so there's one hook, not two systems. Run `uv run madoqua guide`, baseline with `madoqua run`, then `madoqua install`. Start from this config and tune, don't rediscover it:
 
-## Every now and then — audits, never in the hook
+```toml
+[tool.madoqua]
+# fix phase keeps the defaults: ruff check --fix, ruff format (re-staged).
+# check phase keeps the defaults (ruff check, ty check) and adds:
+extend_check = [
+    { name = "biston",  cmd = "biston scan .",       pass_files = false, timeout_s = 60,  max_output_lines = 80 },
+    { name = "zorilla", cmd = "zorilla check tests", pass_files = false, timeout_s = 30,  max_output_lines = 80 },
+    { name = "gerenuk", cmd = "gerenuk run -- -q",   pass_files = false, timeout_s = 120, max_output_lines = 120 },
+]
 
-5. **pycoati** — dev dep only; do NOT add it to any hook or CI. Document it in CLAUDE.md as the periodic test-suite audit: it scores every test for suspicion and hands you a ranked list plus a remediation ladder. Run it before a test cleanup session. Record the exact command.
+[tool.biston.scan]
+exclude = ["tests/**", "migrations/**", ".venv/**"]   # plus generated code for this repo
+```
 
-6. **introspy** — dev dep only. Document it as the way to query past agent sessions (costs, tool calls, patterns) when reviewing how the repo gets worked on.
+- **biston** — in the hook, no debate. Your only job is tuning thresholds and excludes so it's fast and quiet on a clean commit. If the codebase already trips it, tune around the findings and list them for me instead of blocking commits.
+- **zorilla** — fast syntactic test linter, belongs in the gate. It flags path and URL literals in tests (ZR005); when those are test data for a URL-generating program, suppress per line with `# zorilla: ignore[ZR005]`, don't disable the rule. List anything it finds in existing tests.
+- **gerenuk** — runs only the tests the diff can reach; whole suite when unsure. It diffs the *working tree* against `origin/main` (then `main`, `master`), not the index, so unstaged edits count. It needs `tyf` on PATH; the first run starts ty-find's daemon.
 
-## On demand — instead of grep
+Known traps, until fixed upstream: the shim `madoqua install` writes runs bare `madoqua`; if a commit fails with `madoqua: not found` or `cannot run ruff`, prepend `<repo>/.venv/bin` to PATH inside `hooks/pre-commit` (madoqua PR #5 fixes the cause). A commit with no staged `.py` file is a silent no-op that writes no log row; that is not a verified hook.
 
-7. **ty-find** — it runs a daemon, so after adding it as a dev dep, confirm `uv run ty-find` starts the daemon and answers queries in this repo. Then add a note to CLAUDE.md (create it if missing): agents must use `uv run ty-find` instead of grep for symbol definitions and references in this repo.
+## 2. Every now and then — audits, never in the hook
+
+- **pycoati** — dev dep only; do NOT add it to any hook or CI. Document it in CLAUDE.md as the periodic test-suite audit: `uv run pycoati . --format pretty` scores every test for suspicion and hands you a ranked list plus a remediation ladder. Run it before a test cleanup session.
+- **introspy** — dev dep only. Document `uv run introspy stats` / `introspy query` as the way to look at past agent sessions on this repo (costs, tool calls, patterns).
+
+## 3. On demand — instead of grep
+
+- **ty-find** — confirm `uv run tyf find <some symbol>` answers in this repo (this starts the daemon). Add a note to CLAUDE.md (create it if missing): agents must use `uv run tyf` instead of grep for symbol definitions and references. `uv run gerenuk audit <file>` lists symbols nothing references.
 
 ## CLAUDE.md
 
-While updating CLAUDE.md, add a short "toolbox" section covering all of the above: what runs automatically on commit, what's on-demand, the `uv run <tool> guide` convention for learning any of them, and how to refresh the toolbox to latest versions:
+Add a short "toolbox" section: what runs on commit and typical timing (`uv run madoqua stats`), what's on-demand with the exact commands, the `uv run <tool> guide` convention, fresh-clone step (`uv run madoqua install` once; `core.hooksPath` is local config), and how to refresh:
 
 ```
 uv sync --upgrade-package madoqua --upgrade-package gerenuk --upgrade-package biston --upgrade-package zorilla --upgrade-package pycoati --upgrade-package introspy --upgrade-package ty-find
 ```
 
-## Finish
+## Finish — two commits, both through the hook
 
-Commit the setup itself — which doubles as the live test of the new hook. Report what the hook ran and how long it took.
+1. Commit the setup itself. Non-Python files changed, so gerenuk runs the full suite. Report what the hook ran and how long, from `.git/hook-timings.jsonl`.
+2. Push, then change one Python symbol that a test reaches and commit again. Run `uv run gerenuk impacted-tests` first and paste its verdict: it must say `selected` with the test(s) and the symbol they reach, not `run_all`. That is the proof the chain works.
