@@ -1,12 +1,12 @@
 # Toolbox integration prompt
 
-Integrate the aesop toolbox (https://mojzis.github.io/aesop/llms.txt) into this repo so it's used automatically where it should be, and documented where it shouldn't. Add ALL of the tools below as dev dependencies with `uv add --dev <tool>`, then call them via `uv run <tool>`. Each tool teaches you how to use itself — run `uv run <tool> guide` first and follow its conventions rather than guessing at flags.
+Integrate the aesop toolbox (https://mojzis.github.io/aesop/llms.txt) into this repo so it's used automatically where it should be, and documented where it shouldn't. Add ALL of the tools below as dev dependencies with `uv add --dev <tool>`, then call them via `uv run <tool>`. Each tool teaches you how to use itself — run `uv run <tool> guide` first and follow its conventions rather than guessing at flags. If a tool has no `guide` yet, fall back to `--help` and its README.
 
 ## Every commit — the hook
 
-1. **madoqua** — set it up as THE commit hook for this repo, replacing or consolidating whatever hook setup currently exists. Migrate any existing checks (lint, format, etc.) into its config so there's one hook, not two systems.
+1. **madoqua** — set it up as THE commit hook for this repo, replacing or consolidating whatever hook setup currently exists. Migrate any existing checks (lint, format, etc.) into its config so there's one hook, not two systems. Known trap: the shim `madoqua install` writes runs bare `madoqua`; if a commit fails with `madoqua: not found` or `cannot run ruff`, prepend `<repo>/.venv/bin` to PATH inside `hooks/pre-commit`.
 
-2. **gerenuk** — wire it INTO the madoqua hook so that on commit, only the tests impacted by the diff are run, not the whole suite. Verify the chain works end to end: make a small change, commit, confirm the right subset of tests ran.
+2. **gerenuk** — wire it INTO the madoqua hook so that on commit, only the tests impacted by the diff are run, not the whole suite. Verify the chain works end to end: make a small change, commit, confirm the right subset of tests ran. If the installed gerenuk has no impacted-tests command (`gerenuk --help`), leave it out of the hook, keep it as a dev dep for `gerenuk audit`, and say so.
 
 3. **biston** — add it to the madoqua hook, no debate. Your only job is tuning its config for this repo (thresholds, ignored paths like generated code or migrations) so it's fast and quiet on a clean commit. If the current codebase already trips it, tune around the existing findings and list them for me instead of blocking commits.
 
