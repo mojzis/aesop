@@ -36,7 +36,7 @@
     {% block content %}{% endblock %}
   </main>
   <footer>
-    <span>© {{ year }} {{ site.author }}</span>
+    <span>© {{ year }} <a href="{{ site.author_url }}" target="_blank" rel="noopener">{{ site.author }}</a></span>
     <span class="muted">built with &lt;3, python, jinja and claude</span>
   </footer>
   <script src="{{ site.base_url }}/static/js/main.js" defer></script>
