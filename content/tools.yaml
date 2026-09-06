@@ -92,9 +92,10 @@
   reach_for_it: >
     You want to query your Claude Code sessions with SQL — costs, tool calls,
     patterns, the works.
-  guide: uvx introspect guide
-  install: uvx introspect
+  guide: uvx introspy guide
+  install: uvx introspy
   category: meta
   links:
     repo: https://github.com/mojzis/introspect
+    pypi: https://pypi.org/project/introspy/
   order: 70
