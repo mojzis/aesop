@@ -99,3 +99,21 @@
     repo: https://github.com/mojzis/introspect
     pypi: https://pypi.org/project/introspy/
   order: 70
+
+- id: pycoati
+  name: pycoati
+  animal: coati
+  accent: "#a0522d"
+  tagline: Ranks the tests that are probably lying to you.
+  reach_for_it: >
+    The suite is green but you don't trust it — too many mocks, tests that
+    patch the thing they claim to test. pycoati walks the project with
+    tree-sitter, scores every test for suspicion, and hands your agent a
+    remediation ladder.
+  guide: uvx pycoati guide
+  install: uvx pycoati
+  category: guardrails
+  links:
+    repo: https://github.com/mojzis/pycoati
+    pypi: https://pypi.org/project/pycoati/
+  order: 45
