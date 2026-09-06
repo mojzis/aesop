@@ -22,7 +22,7 @@ _md = markdown.Markdown(extensions=["fenced_code"])
 
 
 def inline_md(text: str) -> str:
-    """Render one paragraph of Markdown without the wrapping <p>."""
+    """Render one paragraph of Markdown, without the wrapping <p> element."""
     _md.reset()
     html = _md.convert(text.strip())
     if html.startswith("<p>") and html.endswith("</p>"):
