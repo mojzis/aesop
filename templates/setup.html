@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% set page_title = "setup prompt" %}
+{% set page_description = "One prompt that wires the whole aesop toolbox into a repo." %}
+{% set page_path = "/setup/" %}
+{% block content %}
+<article class="tool setup">
+  <a class="back" href="{{ site.base_url }}/#tools">← all tools</a>
+  <h1>Add all of them at once</h1>
+  <p class="lede">Paste this into your agent. It wires the whole menagerie in three tiers and only calls a tool's <code>guide</code> when it needs the details.</p>
+
+  <div class="cmd primary prompt-box">
+    <span class="cmd-label">prompt</span>
+    <code class="cmd-text">Set up the aesop toolbox: follow {{ site.base_url }}/setup/index.md</code>
+    <button class="copy" type="button" data-copy="Set up the aesop toolbox: follow {{ site.base_url }}/setup/index.md" aria-label="Copy short prompt">copy</button>
+  </div>
+  <p class="muted small">Agent can't fetch URLs? <button class="copy inline" type="button" data-copy-target="setup-prompt">copy the full prompt</button> instead.</p>
+  <pre id="setup-prompt" hidden>{{ setup_raw }}</pre>
+
+  <section class="prose">
+    {{ setup_html | safe }}
+  </section>
+</article>
+{% endblock %}

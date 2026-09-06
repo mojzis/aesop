@@ -122,3 +122,13 @@ footer {
   color: var(--muted); font-size: .85rem;
   display: flex; justify-content: space-between;
 }
+
+/* setup page */
+.setup h1 { margin-top: 1.5rem; }
+.setup .lede { margin-bottom: 1.5rem; }
+.copy.inline { padding: .1rem .45rem; font-size: .85rem; }
+.setup .prose { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.setup .prose h2 { margin-top: 2rem; }
+.setup .prose pre { font-size: .85rem; }
+.pitch .setup-link { margin-top: 1rem; }
+.pitch .setup-link a { color: var(--green); }

@@ -144,6 +144,7 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
         "",
         "## Optional",
         "",
+        f"- [Setup prompt: add all tools to a repo]({site['base_url']}/setup/index.md)",
         f"- [Everything in one file]({site['base_url']}/llms-full.txt)",
         f"- [Author](https://github.com/mojzis): {site['author']}",
         "",
@@ -180,6 +181,17 @@ def main() -> None:
     base = {"site": site, "tools": tools, "by_category": by_category, "year": date.today().year}
 
     render(env, "index.html", OUT / "index.html", **base)
+    setup_raw = (CONTENT / "setup.md").read_text(encoding="utf-8").strip()
+    _md.reset()
+    render(
+        env,
+        "setup.html",
+        OUT / "setup" / "index.html",
+        setup_raw=setup_raw,
+        setup_html=_md.convert(setup_raw),
+        **base,
+    )
+    (OUT / "setup" / "index.md").write_text(setup_raw + "\n", encoding="utf-8")
     for t in tools:
         render(env, "tool.html", OUT / t.id / "index.html", tool=t, **base)
 
