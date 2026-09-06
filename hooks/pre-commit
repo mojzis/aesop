@@ -1,0 +1,8 @@
+#!/bin/sh
+# madoqua shim. Patched: resolve the repo's .venv first so the hook works
+# without an activated venv (madoqua install writes a bare `exec madoqua run`).
+root=$(git rev-parse --show-toplevel)
+if [ -x "$root/.venv/bin/madoqua" ]; then
+  exec "$root/.venv/bin/madoqua" run
+fi
+exec madoqua run
