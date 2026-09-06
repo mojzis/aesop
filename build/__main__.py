@@ -87,22 +87,79 @@ def render(env: Environment, template: str, out: Path, **ctx) -> None:
     out.write_text(env.get_template(template).render(**ctx), encoding="utf-8")
 
 
-def write_llms_txt(site: dict, tools: list[Tool]) -> None:
+def tool_md(site: dict, t: Tool) -> str:
+    lines = [
+        f"# {t.name}",
+        "",
+        f"*{t.animal}*{' (honorary)' if t.honorary else ''} · {site['base_url']}{t.href}",
+        "",
+        f"**{t.tagline}**",
+        "",
+        "## Teach your agent",
+        "",
+        "```",
+        t.guide,
+        "```",
+        "",
+        "## Run",
+        "",
+        "```",
+        t.install,
+        "```",
+        "",
+        "## Reach for it when",
+        "",
+        t.reach_for_it.strip(),
+        "",
+    ]
+    if t.quickstart:
+        lines += ["## Quickstart", "", t.quickstart.strip(), ""]
+    if t.links:
+        lines += ["## Links", ""]
+        lines += [f"- {name}: {url}" for name, url in t.links.items()]
+        lines.append("")
+    return "\n".join(lines)
+
+
+def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
     lines = [
         f"# {site['title']}",
         "",
         f"> {site['tagline']}",
         "",
+        site["tagline_alt"],
+        "",
         "Each tool ships a `guide` subcommand that prints agent-oriented usage instructions.",
-        "Run it before using the tool.",
+        "Run `uvx <tool> guide` before using a tool.",
         "",
         "## Tools",
         "",
     ]
     for t in tools:
-        lines.append(f"- [{t.name}]({site['base_url']}{t.href}): {t.tagline} Guide: `{t.guide}`")
-    lines.append("")
-    (OUT / "llms.txt").write_text("\n".join(lines), encoding="utf-8")
+        lines.append(
+            f"- [{t.name}]({site['base_url']}{t.href}) ({t.category}): {t.tagline} "
+            f"Guide: `{t.guide}`. Markdown: {site['base_url']}{t.href}index.md"
+        )
+    lines += [
+        "",
+        "## Optional",
+        "",
+        f"- [Everything in one file]({site['base_url']}/llms-full.txt)",
+        f"- [Author](https://github.com/mojzis): {site['author']}",
+        "",
+    ]
+    if full:
+        for t in tools:
+            lines += ["---", "", tool_md(site, t)]
+    return "\n".join(lines)
+
+
+def write_markdown(site: dict, tools: list[Tool]) -> None:
+    (OUT / "llms.txt").write_text(index_md(site, tools), encoding="utf-8")
+    (OUT / "index.md").write_text(index_md(site, tools), encoding="utf-8")
+    (OUT / "llms-full.txt").write_text(index_md(site, tools, full=True), encoding="utf-8")
+    for t in tools:
+        (OUT / t.id / "index.md").write_text(tool_md(site, t), encoding="utf-8")
 
 
 def main() -> None:
@@ -127,7 +184,7 @@ def main() -> None:
         render(env, "tool.html", OUT / t.id / "index.html", tool=t, **base)
 
     shutil.copytree(STATIC, OUT / "static")
-    write_llms_txt(site, tools)
+    write_markdown(site, tools)
     (OUT / ".nojekyll").touch()
     print(f"built {len(tools)} tools -> {OUT.relative_to(ROOT)}/")
 
