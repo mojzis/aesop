@@ -1,9 +1,9 @@
 # aesop
 
-Static site: `content/` (YAML + Markdown) → `build/__main__.py` (Jinja2) → `site/`.
+Static site: `content/site.yaml` + `content/tools.yaml` → `build/__main__.py` (Jinja2) → `site/`. Plan in `docs/plans/`.
 
-- Build: `uv run build`. Preview: `python -m http.server -d site 8000`.
+- Build: `uv run build`. Local preview: `BASE_URL= uv run build && python -m http.server -d site 8000`.
 - Lint: `uv run ruff check . && uv run ruff format .`
 - `site/` is generated, gitignored. Never edit it.
 - Links use `{{ site.base_url }}` prefix (GitHub Pages project subpath). Keep it.
-- Project front matter keys: title, summary, date, tags, repo, url, featured, slug.
+- `content/tools.yaml` is the single source of truth for tool copy. Keys: id, name, animal, honorary, accent, tagline, reach_for_it, guide, install, category, links, order, quickstart (md), mascot, demo.

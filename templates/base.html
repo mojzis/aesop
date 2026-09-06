@@ -3,18 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page_title %}{{ page_title }} · {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ site.description }}">
+  {% set og_title = page_title ~ ' · ' ~ site.title if page_title else site.title ~ ' — ' ~ site.tagline %}
+  {% set og_desc = page_description or site.description %}
+  <title>{{ og_title }}</title>
+  <meta name="description" content="{{ og_desc }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ og_desc }}">
+  <meta property="og:url" content="{{ site.base_url }}{{ page_path or '/' }}">
+  <meta property="og:image" content="{{ site.base_url }}{{ page_image or '/static/img/og-default.png' }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{ site.base_url }}{{ page_path or '/' }}">
+  <link rel="icon" href="{{ site.base_url }}/static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ site.base_url }}/static/css/main.css">
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="{{ site.base_url }}/">{{ site.title }}</a>
+    <a class="brand" href="{{ site.base_url }}/"><span class="brand-dot"></span>{{ site.title }}</a>
     <nav>
-      <a href="{{ site.base_url }}/#projects">Projects</a>
+      <a href="{{ site.base_url }}/#tools">Tools</a>
+      <a href="{{ site.base_url }}/llms.txt">llms.txt</a>
       {% for name, url in site.links.items() %}
       <a href="{{ url }}" target="_blank" rel="noopener">{{ name }}</a>
       {% endfor %}
@@ -25,6 +37,7 @@
   </main>
   <footer>
     <span>© {{ year }} {{ site.author }}</span>
+    <span class="muted">built with python + jinja</span>
   </footer>
   <script src="{{ site.base_url }}/static/js/main.js" defer></script>
 </body>

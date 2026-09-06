@@ -1,7 +1,8 @@
-"""Static site generator: content/ + templates/ -> site/."""
+"""Static site generator: content/*.yaml + templates/ -> site/."""
 
 from __future__ import annotations
 
+import os
 import shutil
 from dataclasses import dataclass, field
 from datetime import date
@@ -17,61 +18,91 @@ TEMPLATES = ROOT / "templates"
 STATIC = ROOT / "static"
 OUT = ROOT / "site"
 
+_md = markdown.Markdown(extensions=["fenced_code"])
+
+
+def inline_md(text: str) -> str:
+    """Render one paragraph of Markdown without the wrapping <p>."""
+    _md.reset()
+    html = _md.convert(text.strip())
+    if html.startswith("<p>") and html.endswith("</p>"):
+        html = html[3:-4]
+    return html
+
 
 @dataclass
-class Project:
-    slug: str
-    title: str
-    summary: str
-    body_html: str
-    date: date | None = None
-    tags: list[str] = field(default_factory=list)
-    repo: str | None = None
-    url: str | None = None
-    featured: bool = False
+class Tool:
+    id: str
+    name: str
+    animal: str
+    accent: str
+    tagline: str
+    reach_for_it: str
+    guide: str
+    install: str
+    category: str
+    order: int = 100
+    honorary: bool = False
+    links: dict[str, str] = field(default_factory=dict)
+    quickstart: str | None = None
+    mascot: str | None = None
+    demo: str | None = None
 
     @property
     def href(self) -> str:
-        return f"/projects/{self.slug}/"
+        return f"/{self.id}/"
+
+    @property
+    def mascot_path(self) -> str:
+        return f"/static/img/{self.mascot or self.id + '.svg'}"
+
+    @property
+    def og_image(self) -> str:
+        return f"/static/img/{self.id}-og.png"
+
+    @property
+    def reach_html(self) -> str:
+        return inline_md(self.reach_for_it)
+
+    @property
+    def quickstart_html(self) -> str | None:
+        if not self.quickstart:
+            return None
+        _md.reset()
+        return _md.convert(self.quickstart)
 
 
-def split_front_matter(text: str) -> tuple[dict, str]:
-    if not text.startswith("---"):
-        return {}, text
-    _, fm, body = text.split("---", 2)
-    return yaml.safe_load(fm) or {}, body.strip()
+def load_yaml(name: str):
+    return yaml.safe_load((CONTENT / name).read_text(encoding="utf-8"))
 
 
-def load_projects() -> list[Project]:
-    md = markdown.Markdown(extensions=["fenced_code", "tables", "toc"])
-    projects: list[Project] = []
-    for path in sorted((CONTENT / "projects").glob("*.md")):
-        meta, body = split_front_matter(path.read_text(encoding="utf-8"))
-        md.reset()
-        projects.append(
-            Project(
-                slug=meta.get("slug", path.stem),
-                title=meta["title"],
-                summary=meta.get("summary", ""),
-                body_html=md.convert(body),
-                date=meta.get("date"),
-                tags=meta.get("tags", []),
-                repo=meta.get("repo"),
-                url=meta.get("url"),
-                featured=meta.get("featured", False),
-            )
-        )
-    projects.sort(key=lambda p: p.date or date.min, reverse=True)
-    return projects
-
-
-def load_site_config() -> dict:
-    return yaml.safe_load((CONTENT / "site.yaml").read_text(encoding="utf-8"))
+def load_tools() -> list[Tool]:
+    tools = [Tool(**t) for t in load_yaml("tools.yaml")]
+    tools.sort(key=lambda t: t.order)
+    return tools
 
 
 def render(env: Environment, template: str, out: Path, **ctx) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(env.get_template(template).render(**ctx), encoding="utf-8")
+
+
+def write_llms_txt(site: dict, tools: list[Tool]) -> None:
+    lines = [
+        f"# {site['title']}",
+        "",
+        f"> {site['tagline']}",
+        "",
+        "Each tool ships a `guide` subcommand that prints agent-oriented usage instructions.",
+        "Run it before using the tool.",
+        "",
+        "## Tools",
+        "",
+    ]
+    for t in tools:
+        lines.append(f"- [{t.name}]({site['base_url']}{t.href}): {t.tagline} Guide: `{t.guide}`")
+    lines.append("")
+    (OUT / "llms.txt").write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> None:
@@ -85,24 +116,20 @@ def main() -> None:
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    site = load_site_config()
-    projects = load_projects()
-    base = {"site": site, "projects": projects, "year": date.today().year}
+    site = load_yaml("site.yaml")
+    site["base_url"] = os.environ.get("BASE_URL", site["base_url"])
+    tools = load_tools()
+    by_category = {key: [t for t in tools if t.category == key] for key in site["categories"]}
+    base = {"site": site, "tools": tools, "by_category": by_category, "year": date.today().year}
 
-    render(env, "index.html", OUT / "index.html", page_title=None, **base)
-    for p in projects:
-        render(
-            env,
-            "project.html",
-            OUT / "projects" / p.slug / "index.html",
-            project=p,
-            page_title=p.title,
-            **base,
-        )
+    render(env, "index.html", OUT / "index.html", **base)
+    for t in tools:
+        render(env, "tool.html", OUT / t.id / "index.html", tool=t, **base)
 
     shutil.copytree(STATIC, OUT / "static")
+    write_llms_txt(site, tools)
     (OUT / ".nojekyll").touch()
-    print(f"built {len(projects)} projects -> {OUT.relative_to(ROOT)}/")
+    print(f"built {len(tools)} tools -> {OUT.relative_to(ROOT)}/")
 
 
 if __name__ == "__main__":

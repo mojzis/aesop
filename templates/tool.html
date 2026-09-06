@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set page_title = tool.name %}
+{% set page_description = tool.tagline %}
+{% set page_path = tool.href %}
+{% set page_image = tool.og_image %}
+{% block content %}
+<article class="tool" style="--accent: {{ tool.accent }}">
+  <a class="back" href="{{ site.base_url }}/#tools">← all tools</a>
+  <div class="tool-hero">
+    <img class="mascot big" src="{{ site.base_url }}{{ tool.mascot_path }}" alt="{{ tool.animal }}" width="220" height="220">
+    <div>
+      <p class="animal">{{ tool.animal }}{% if tool.honorary %} <span class="muted">(honorary)</span>{% endif %}</p>
+      <h1>{{ tool.name }}</h1>
+      <p class="lede">{{ tool.tagline }}</p>
+    </div>
+  </div>
+
+  <section class="cmds">
+    {% set cmd = tool.guide %}{% set label = "teach your agent" %}{% set primary = true %}
+    {% include "_cmd.html" %}
+    {% set cmd = tool.install %}{% set label = "run" %}{% set primary = false %}
+    {% include "_cmd.html" %}
+  </section>
+
+  <section class="prose">
+    <h2>Reach for it when</h2>
+    <p>{{ tool.reach_html | safe }}</p>
+    {% if tool.quickstart_html %}
+    <h2>Quickstart</h2>
+    {{ tool.quickstart_html | safe }}
+    {% endif %}
+    {% if tool.demo %}
+    <h2>Demo</h2>
+    <img class="demo" src="{{ site.base_url }}/static/img/{{ tool.demo }}" alt="{{ tool.name }} demo">
+    {% endif %}
+  </section>
+
+  <section class="links">
+    {% for name, url in tool.links.items() %}
+    <a href="{{ url }}" target="_blank" rel="noopener">{{ name }} ↗</a>
+    {% endfor %}
+  </section>
+</article>
+{% endblock %}

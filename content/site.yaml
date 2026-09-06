@@ -1,7 +1,14 @@
-title: Matouš
-tagline: Things I build.
-description: A portfolio of projects.
-author: Matouš
+title: aesop
+tagline: A small menagerie of fast tools that keep agentic Python development honest.
+tagline_alt: Agents write code fast. These keep it from going feral.
+pitch: Every tool here teaches your agent itself — just say
+pitch_cmd: run `uvx <tool> guide`
+description: Fast CLI tools for agentic Python development. Each one teaches your agent how to use it.
+author: Matouš Mojžíš
 base_url: https://mojzis.github.io/aesop
 links:
   GitHub: https://github.com/mojzis
+categories:
+  guardrails: Guardrails
+  workflow: Workflow
+  meta: Meta

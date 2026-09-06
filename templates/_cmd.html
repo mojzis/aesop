@@ -1,0 +1,6 @@
+{# usage: {% include "_cmd.html" with context %} after setting cmd, label, primary #}
+<div class="cmd{% if primary %} primary{% endif %}">
+  {% if label %}<span class="cmd-label">{{ label }}</span>{% endif %}
+  <code class="cmd-text">{{ cmd }}</code>
+  <button class="copy" type="button" data-copy="{{ cmd }}" aria-label="Copy command">copy</button>
+</div>

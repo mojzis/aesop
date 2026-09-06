@@ -2,19 +2,33 @@
 {% block content %}
 <section class="hero">
   <h1>{{ site.tagline }}</h1>
-  <p>{{ site.description }}</p>
+  <p class="alt">{{ site.tagline_alt }}</p>
+  <div class="pitch">
+    <p>{{ site.pitch }}:</p>
+    {% set cmd = "uvx <tool> guide" %}{% set label = none %}{% set primary = true %}
+    {% include "_cmd.html" %}
+    <p class="muted small">Every tool ships a <code>guide</code> subcommand written for agents. Point yours at it and get out of the way.</p>
+  </div>
 </section>
 
-<section id="projects" class="grid">
-  {% for p in projects %}
-  <a class="card{% if p.featured %} featured{% endif %}" href="{{ site.base_url }}{{ p.href }}">
-    <h2>{{ p.title }}</h2>
-    <p>{{ p.summary }}</p>
-    <div class="meta">
-      {% if p.date %}<time datetime="{{ p.date }}">{{ p.date.strftime("%b %Y") }}</time>{% endif %}
-      {% for t in p.tags %}<span class="tag">{{ t }}</span>{% endfor %}
-    </div>
-  </a>
+<section id="tools">
+  {% for key, label in site.categories.items() %}
+  {% if by_category[key] %}
+  <h2 class="category">{{ label }}</h2>
+  <div class="grid">
+    {% for t in by_category[key] %}
+    <a class="card" href="{{ site.base_url }}{{ t.href }}" style="--accent: {{ t.accent }}">
+      <img class="mascot" src="{{ site.base_url }}{{ t.mascot_path }}" alt="{{ t.animal }}" width="96" height="96" loading="lazy">
+      <div class="card-body">
+        <h3>{{ t.name }} <span class="animal">{{ t.animal }}</span></h3>
+        <p>{{ t.tagline }}</p>
+        <code class="guide-inline">{{ t.guide }}</code>
+      </div>
+      <span class="more">more →</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% endfor %}
 </section>
 {% endblock %}

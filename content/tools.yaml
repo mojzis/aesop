@@ -1,0 +1,100 @@
+- id: ty-find
+  name: ty-find
+  animal: tarsier
+  honorary: true
+  accent: "#a78bfa"
+  tagline: Find the symbol, not 400 grep hits.
+  reach_for_it: >
+    Your agent needs definitions and references in a large repo — LSP-accurate
+    answers at CLI speed, without the token bonfire of `grep -rn`.
+  guide: uvx ty-find guide
+  install: uvx ty-find
+  category: workflow
+  links:
+    repo: https://github.com/mojzis/ty-find
+    docs: https://mojzis.github.io/ty-find/
+    pypi: https://pypi.org/project/ty-find/
+  order: 10
+
+- id: biston
+  name: biston
+  animal: peppered moth
+  accent: "#b8a48a"
+  tagline: Finds the code your agent wrote twice.
+  reach_for_it: >
+    The repo grew fast and you suspect three slightly different copies of the
+    same helper. Structural detection via tree-sitter, so renamed variables
+    don't fool it.
+  guide: uvx biston guide
+  install: uvx biston
+  category: guardrails
+  links:
+    repo: https://github.com/mojzis/biston
+    docs: https://mojzis.github.io/biston/
+    pypi: https://pypi.org/project/biston/
+  order: 30
+
+- id: zorilla
+  name: zorilla
+  animal: striped polecat
+  accent: "#e5ff4a"
+  tagline: Sniffs out tests that test nothing.
+  reach_for_it: >
+    An agent just proudly delivered 40 green tests and you want to know how
+    many actually assert something.
+  guide: uvx zorilla guide
+  install: uvx zorilla
+  category: guardrails
+  links:
+    repo: https://github.com/mojzis/zorilla
+    pypi: https://pypi.org/project/zorilla/
+  order: 40
+
+- id: gerenuk
+  name: gerenuk
+  animal: gerenuk
+  accent: "#d98c4a"
+  tagline: Runs only the tests your diff can touch.
+  reach_for_it: >
+    You want tests in the pre-commit hook without colleagues hating you —
+    diff → changed symbols → impacted tests, in seconds.
+  guide: uvx gerenuk guide
+  install: uvx gerenuk
+  category: workflow
+  links:
+    repo: https://github.com/mojzis/gerenuk
+    docs: https://mojzis.github.io/gerenuk/
+    pypi: https://pypi.org/project/gerenuk/
+  order: 50
+
+- id: madoqua
+  name: madoqua
+  animal: dik-dik
+  accent: "#e0b98a"
+  tagline: The commit hook that's silent when you're fine and precise when you're not.
+  reach_for_it: >
+    You're done with noisy hook runners — auto-fixes, restages, one-line
+    verdict on success, dense token-aware output on failure.
+  guide: uvx madoqua guide
+  install: uvx madoqua
+  category: workflow
+  links:
+    repo: https://github.com/mojzis/madoqua
+    docs: https://mojzis.github.io/madoqua/
+  order: 60
+
+- id: introspect
+  name: introspect
+  animal: owl
+  honorary: true
+  accent: "#5b7cff"
+  tagline: What did your agent actually do all day?
+  reach_for_it: >
+    You want to query your Claude Code sessions with SQL — costs, tool calls,
+    patterns, the works.
+  guide: uvx introspect guide
+  install: uvx introspect
+  category: meta
+  links:
+    repo: https://github.com/mojzis/introspect
+  order: 70
