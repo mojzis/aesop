@@ -91,7 +91,8 @@ def tool_md(site: dict, t: Tool) -> str:
     lines = [
         f"# {t.name}",
         "",
-        f"*{t.animal}*{' (honorary)' if t.honorary else ''} · {site['base_url']}{t.href}",
+        f"*{t.animal}*{' (honorary)' if t.honorary else ''} · {t.category}"
+        f" · {site['base_url']}{t.href}",
         "",
         f"**{t.tagline}**",
         "",
