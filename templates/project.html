@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="project">
+  <a class="back" href="{{ site.base_url }}/#projects">← all projects</a>
+  <h1>{{ project.title }}</h1>
+  <p class="lede">{{ project.summary }}</p>
+  <div class="meta">
+    {% if project.date %}<time datetime="{{ project.date }}">{{ project.date.strftime("%B %Y") }}</time>{% endif %}
+    {% for t in project.tags %}<span class="tag">{{ t }}</span>{% endfor %}
+    {% if project.repo %}<a href="{{ project.repo }}" target="_blank" rel="noopener">source ↗</a>{% endif %}
+    {% if project.url %}<a href="{{ project.url }}" target="_blank" rel="noopener">live ↗</a>{% endif %}
+  </div>
+  <div class="prose">
+    {{ project.body_html | safe }}
+  </div>
+</article>
+{% endblock %}
