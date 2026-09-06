@@ -1,10 +1,8 @@
 #!/bin/sh
-# madoqua shim. Patched: `madoqua install` writes a bare `exec madoqua run`,
-# which needs an activated venv. Put the repo's .venv/bin on PATH first so
-# madoqua and the tools it runs (ruff, ty, biston, zorilla) resolve.
+# madoqua shim. `madoqua install` writes a bare `exec madoqua run`, which
+# needs madoqua on PATH; from a shell without the venv active it fails with
+# `madoqua: not found`. Prefer the repo's own .venv copy (madoqua >= 0.2.1
+# then puts .venv/bin on PATH for the tools it runs).
 root=$(git rev-parse --show-toplevel)
-if [ -d "$root/.venv/bin" ]; then
-  PATH="$root/.venv/bin:$PATH"
-  export PATH
-fi
+[ -x "$root/.venv/bin/madoqua" ] && exec "$root/.venv/bin/madoqua" run
 exec madoqua run

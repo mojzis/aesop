@@ -2,7 +2,7 @@ title: aesop
 tagline: A small menagerie of fast tools that keep agentic Python development honest.
 tagline_alt: Agents write code fast. These keep it from going feral.
 pitch: Every tool here teaches your agent itself — just say
-pitch_cmd: run `uvx <tool> guide`
+pitch_cmd: run `uvx <tool>@latest guide`
 description: Fast CLI tools for agentic Python development. Each one teaches your agent how to use it.
 author: "@mojzis"
 author_url: https://github.com/mojzis

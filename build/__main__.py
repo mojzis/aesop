@@ -130,7 +130,7 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
         site["tagline_alt"],
         "",
         "Each tool ships a `guide` subcommand that prints agent-oriented usage instructions.",
-        "Run `uvx <tool> guide` before using a tool.",
+        "Run `uvx <tool>@latest guide` before using a tool.",
         "",
         "## Tools",
         "",

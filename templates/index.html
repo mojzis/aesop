@@ -5,7 +5,7 @@
   <p class="alt">{{ site.tagline_alt }}</p>
   <div class="pitch">
     <p>{{ site.pitch }}:</p>
-    {% set cmd = "uvx <tool> guide" %}{% set label = none %}{% set primary = true %}
+    {% set cmd = "uvx <tool>@latest guide" %}{% set label = none %}{% set primary = true %}
     {% include "_cmd.html" %}
     <p class="muted small">Every tool ships a <code>guide</code> subcommand written for agents. Point yours at it and get out of the way.</p>
     <p class="small setup-link">Want all of them? <a href="{{ site.base_url }}/setup/">One prompt wires the whole toolbox →</a></p>

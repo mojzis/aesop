@@ -7,8 +7,8 @@
   reach_for_it: >
     Your agent needs definitions and references in a large repo — LSP-accurate
     answers at CLI speed, without the token bonfire of `grep -rn`.
-  guide: uvx ty-find guide
-  install: uvx ty-find
+  guide: uvx ty-find@latest guide
+  install: uvx ty-find@latest
   category: workflow
   links:
     repo: https://github.com/mojzis/ty-find
@@ -25,8 +25,8 @@
     The repo grew fast and you suspect three slightly different copies of the
     same helper. Structural detection via tree-sitter, so renamed variables
     don't fool it.
-  guide: uvx biston guide
-  install: uvx biston
+  guide: uvx biston@latest guide
+  install: uvx biston@latest
   category: guardrails
   links:
     repo: https://github.com/mojzis/biston
@@ -45,8 +45,8 @@
     no assertion, sleep, patch stacks — as a pre-commit hook. Says yes or no,
     then gets out of the way. For the full ranked audit, see
     [pycoati](../pycoati/).
-  guide: uvx zorilla guide
-  install: uvx zorilla
+  guide: uvx zorilla@latest guide
+  install: uvx zorilla@latest
   category: guardrails
   links:
     repo: https://github.com/mojzis/zorilla
@@ -61,8 +61,8 @@
   reach_for_it: >
     You want tests in the pre-commit hook without colleagues hating you —
     diff → changed symbols → impacted tests, in seconds.
-  guide: uvx gerenuk guide
-  install: uvx gerenuk
+  guide: uvx gerenuk@latest guide
+  install: uvx gerenuk@latest
   category: workflow
   links:
     repo: https://github.com/mojzis/gerenuk
@@ -78,8 +78,8 @@
   reach_for_it: >
     You're done with noisy hook runners — auto-fixes, restages, one-line
     verdict on success, dense token-aware output on failure.
-  guide: uvx madoqua guide
-  install: uvx madoqua
+  guide: uvx madoqua@latest guide
+  install: uvx madoqua@latest
   category: workflow
   links:
     repo: https://github.com/mojzis/madoqua
@@ -96,8 +96,8 @@
   reach_for_it: >
     You want to query your Claude Code sessions with SQL — costs, tool calls,
     patterns, the works.
-  guide: uvx introspy guide
-  install: uvx introspy
+  guide: uvx introspy@latest guide
+  install: uvx introspy@latest
   category: meta
   links:
     repo: https://github.com/mojzis/introspect
@@ -115,8 +115,8 @@
     coverage, scores every test for suspicion, and hands your agent a ranked
     list plus a remediation ladder. For the per-commit gate, see
     [zorilla](../zorilla/).
-  guide: uvx pycoati guide
-  install: uvx pycoati
+  guide: uvx pycoati@latest guide
+  install: uvx pycoati@latest
   category: guardrails
   links:
     repo: https://github.com/mojzis/pycoati
