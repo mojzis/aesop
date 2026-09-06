@@ -84,6 +84,7 @@
   links:
     repo: https://github.com/mojzis/madoqua
     docs: https://mojzis.github.io/madoqua/
+    pypi: https://pypi.org/project/madoqua/
   order: 60
 
 - id: introspect
