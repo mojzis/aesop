@@ -1,8 +1,10 @@
 #!/bin/sh
-# madoqua shim. Patched: resolve the repo's .venv first so the hook works
-# without an activated venv (madoqua install writes a bare `exec madoqua run`).
+# madoqua shim. Patched: `madoqua install` writes a bare `exec madoqua run`,
+# which needs an activated venv. Put the repo's .venv/bin on PATH first so
+# madoqua and the tools it runs (ruff, ty, biston, zorilla) resolve.
 root=$(git rev-parse --show-toplevel)
-if [ -x "$root/.venv/bin/madoqua" ]; then
-  exec "$root/.venv/bin/madoqua" run
+if [ -d "$root/.venv/bin" ]; then
+  PATH="$root/.venv/bin:$PATH"
+  export PATH
 fi
 exec madoqua run
