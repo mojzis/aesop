@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set page_title = page.page_title %}
+{% set page_description = page.description %}
+{% set page_path = "/" ~ page.id ~ "/" %}
+{% set prompt = page.prompt.replace("{url}", site.base_url ~ page_path ~ "index.md") %}
+{% block content %}
+<article class="tool page">
+  <a class="back" href="{{ site.base_url }}/#tools">← all tools</a>
+  <h1>{{ page.title }}</h1>
+  <p class="lede">{{ page.lede | safe }}</p>
+
+  <div class="cmd primary prompt-box">
+    <span class="cmd-label">prompt</span>
+    <code class="cmd-text">{{ prompt }}</code>
+    <button class="copy" type="button" data-copy="{{ prompt }}" aria-label="Copy short prompt">copy</button>
+  </div>
+  <p class="muted small">Agent can't fetch URLs? <button class="copy inline" type="button" data-copy-target="page-prompt">copy the full prompt</button> instead.</p>
+  <pre id="page-prompt" hidden>{{ raw }}</pre>
+
+  <section class="prose">
+    {{ html | safe }}
+  </section>
+</article>
+{% endblock %}

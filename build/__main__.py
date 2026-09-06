@@ -87,6 +87,20 @@ def render(env: Environment, template: str, out: Path, **ctx) -> None:
     out.write_text(env.get_template(template).render(**ctx), encoding="utf-8")
 
 
+def page_md(page_id: str) -> str:
+    """Raw Markdown of a prompt page (content/<id>.md); served verbatim as index.md."""
+    return (CONTENT / f"{page_id}.md").read_text(encoding="utf-8").strip()
+
+
+def render_page(env: Environment, page: dict, **base) -> None:
+    """One prompt page: content/<id>.md -> /<id>/index.html + /<id>/index.md."""
+    raw = page_md(page["id"])
+    _md.reset()
+    out = OUT / page["id"]
+    render(env, "page.html", out / "index.html", page=page, raw=raw, html=_md.convert(raw), **base)
+    (out / "index.md").write_text(raw + "\n", encoding="utf-8")
+
+
 def tool_md(site: dict, t: Tool) -> str:
     lines = [
         f"# {t.name}",
@@ -146,6 +160,8 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
         "## Optional",
         "",
         f"- [Setup prompt: add all tools to a repo]({site['base_url']}/setup/index.md)",
+        f"- [The guide principle, and a prompt to add `guide` to any CLI]"
+        f"({site['base_url']}/guide/index.md)",
         f"- [Everything in one file]({site['base_url']}/llms-full.txt)",
         f"- [Author](https://github.com/mojzis): {site['author']}",
         "",
@@ -182,17 +198,8 @@ def main() -> None:
     base = {"site": site, "tools": tools, "by_category": by_category, "year": date.today().year}
 
     render(env, "index.html", OUT / "index.html", **base)
-    setup_raw = (CONTENT / "setup.md").read_text(encoding="utf-8").strip()
-    _md.reset()
-    render(
-        env,
-        "setup.html",
-        OUT / "setup" / "index.html",
-        setup_raw=setup_raw,
-        setup_html=_md.convert(setup_raw),
-        **base,
-    )
-    (OUT / "setup" / "index.md").write_text(setup_raw + "\n", encoding="utf-8")
+    for page in site["pages"]:
+        render_page(env, page, **base)
     for t in tools:
         render(env, "tool.html", OUT / t.id / "index.html", tool=t, **base)
 

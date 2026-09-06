@@ -13,3 +13,18 @@ categories:
   guardrails: Guardrails
   workflow: Workflow
   meta: Meta
+pages:
+  - id: setup
+    nav: Setup
+    title: Add all of them at once
+    page_title: setup prompt
+    description: One prompt that wires the whole aesop toolbox into a repo.
+    lede: Paste this into your agent. It wires the whole menagerie in three tiers and only calls a tool's <code>guide</code> when it needs the details.
+    prompt: "Set up the aesop toolbox: follow {url}"
+  - id: guide
+    nav: Guide
+    title: Every tool teaches itself
+    page_title: the guide principle
+    description: Why every aesop tool ships a guide subcommand, the contract it follows, and a prompt to add one to any CLI.
+    lede: <code>&lt;tool&gt; guide</code> prints one page written for the agent about to use it. Here is the contract, and a prompt that adds it to a CLI you own.
+    prompt: "Add a `guide` subcommand to this CLI: follow {url}"
