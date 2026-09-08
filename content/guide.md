@@ -54,4 +54,18 @@ Work in this order. Do not skip to writing prose.
 - Do not fetch the page from the network at runtime. It must match the binary that runs.
 - Do not make `guide` do anything besides print. No "guide --apply".
 
+## When the agent gets it wrong anyway
+
+`guide` is the channel before the call. The usage error is the channel after it, and stock Typer spends it on a Rich panel and exit 2. An agent reading that either burns turns re-reading `--help` or abandons the tool and edits files by hand.
+
+[typer-agentic](https://github.com/mojzis/typer-agentic) fixes the second channel for Typer CLIs. When an agent is driving (detected via `CLAUDECODE` and friends), a misspelled flag or missing argument prints the error, the valid parameters with types and choices, exactly one corrected example, and a line telling the agent to apply that one change and retry rather than work around the tool. Humans keep Typer's stock output, byte for byte.
+
+```python
+from typer_agentic import agent_errors
+
+main = agent_errors(app)  # use `main` as the [project.scripts] entry point
+```
+
+Not part of the `guide` contract, and not for every repo: it is for CLIs you author, on Typer, that agents will call. Wire it in step 5 if both hold. `myapp --agent-skill` also prints a SKILL.md for the CLI, which is the proactive counterpart for harnesses that read skills.
+
 next: `uvx <tool>@latest guide` in an empty directory, and read what it prints.
