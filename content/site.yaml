@@ -20,7 +20,7 @@ pages:
     page_title: setup prompt
     description: One prompt that wires the whole aesop toolbox into a repo.
     lede: Paste this into your agent. It wires the whole menagerie in three tiers and only calls a tool's <code>guide</code> when it needs the details.
-    prompt: "Set up the aesop toolbox: follow {url}"
+    prompt: "Set up the aesop toolbox: read {url} with `curl` (not a fetch tool, its summary loses the detail) and follow it."
   - id: guide
     nav: Guide
     title: Every tool teaches itself
