@@ -38,7 +38,7 @@ dev = [
     { name = "biston", specifier = ">=0.7.0" },
     { name = "gerenuk", specifier = ">=0.1.0" },
     { name = "introspy", specifier = ">=0.3.1" },
-    { name = "madoqua", specifier = ">=0.1.0" },
+    { name = "madoqua", specifier = ">=0.2.4" },
     { name = "pycoati", specifier = ">=0.2.4" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "ruff", specifier = ">=0.16.6" },
@@ -407,13 +407,13 @@ wheels = [
 
 [[package]]
 name = "madoqua"
-version = "0.2.1"
+version = "0.2.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0e/4b/e320c86e322a935c6dcb5953a2895f4d7a903c2453b3f53c1a417f84c31a/madoqua-0.2.1.tar.gz", hash = "sha256:451d4eac66e3d9d5c4967253d3901831a8f20cc96d97ab599fffe47b0a2527f6", size = 885027, upload-time = "2026-09-06T09:47:45.161Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a7/db/872dec31bfdb24d7b868a4d9e27771c0105ebb17eb8b8ab07319398d8710/madoqua-0.2.4.tar.gz", hash = "sha256:f61321abc7ff31455947b2ac786c564aa2e4493e3d0a0a024460b0897c723003", size = 894699, upload-time = "2026-09-19T16:59:58.647Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/56/ae/c84cf2396ca84d8b2b7911cae5f6003ae563817e42f4b29d2ca54c7a0254/madoqua-0.2.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:f87e4a5a581d5a081b177c69a7df2cbfa9cb7e5989ad6184b96bb40896c78f9b", size = 756069, upload-time = "2026-09-06T09:47:39.815Z" },
-    { url = "https://files.pythonhosted.org/packages/23/fb/6be9ff5e7c18fead8e3863b8cc91748b59e9778cdb349ca062288bcdeae3/madoqua-0.2.1-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:1a22d4b7acc8d676ac307378e527764e01d1401ebef899d416f6be94759dbcf7", size = 867719, upload-time = "2026-09-06T09:47:41.938Z" },
-    { url = "https://files.pythonhosted.org/packages/c4/e6/69ee14d082f24e0de06702341d6adb9cf56b2e905f5c15cc5d8cf53f678b/madoqua-0.2.1-py3-none-win_amd64.whl", hash = "sha256:efd7468d8435375d1bcf15128c01d87cad719052e6a0f9f03cdeb0131585381c", size = 775179, upload-time = "2026-09-06T09:47:43.308Z" },
+    { url = "https://files.pythonhosted.org/packages/4e/79/d911a6d7574739393d71c716a280ba17d43dea4f24f9845fbfbdcaecb16a/madoqua-0.2.4-py3-none-macosx_11_0_arm64.whl", hash = "sha256:71ae4115d032ad56f6690178cffa776fc998b8945b44ee2bb2d919192ed7481f", size = 757026, upload-time = "2026-09-19T16:59:53.403Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/9e/2fcfd99468aefd18455569559f43e9991aa5cc332aeff8cacebed2f860f4/madoqua-0.2.4-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:af431cf1ca698ffa1cc0f4d65412c47a4845577cc4d3709e0379a97135408d70", size = 872530, upload-time = "2026-09-19T16:59:55.381Z" },
+    { url = "https://files.pythonhosted.org/packages/d3/09/090dace6785ce369e968c9314032e67a20021ccb2d9b53d3bc9593dece71/madoqua-0.2.4-py3-none-win_amd64.whl", hash = "sha256:dabe3cfd6f7577c4aae90333e6690c8af93113858a699ad90aba4d17f176e6f4", size = 779178, upload-time = "2026-09-19T16:59:56.824Z" },
 ]
 
 [[package]]
