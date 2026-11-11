@@ -22,7 +22,7 @@ def test_inline_md_strips_wrapping_paragraph():
 
 def test_tool_paths_derive_from_id():
     assert BASE.href == "/biston/"  # zorilla: ignore[ZR005]
-    assert BASE.mascot_path == "/static/img/biston.svg"  # zorilla: ignore[ZR005]
+    assert BASE.mascot_path == "/static/img/biston.webp"  # zorilla: ignore[ZR005]
     assert BASE.og_image == "/static/img/biston-og.png"  # zorilla: ignore[ZR005]
 
 

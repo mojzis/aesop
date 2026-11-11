@@ -54,7 +54,7 @@ class Tool:
 
     @property
     def mascot_path(self) -> str:
-        return f"/static/img/{self.mascot or self.id + '.svg'}"
+        return f"/static/img/{self.mascot or self.id + '.webp'}"
 
     @property
     def og_image(self) -> str:

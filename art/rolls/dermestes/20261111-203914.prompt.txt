@@ -1,0 +1,4 @@
+# model: google/nano-banana
+# aspect: 1:1
+
+Natural history illustration from a 19th-century zoology book: a skin beetle (Dermestes lardarius), dorsal view, dark brown with a pale speckled band across the wing cases, six legs and clubbed antennae spread. Fine black ink line drawing with pen hatching, hand-tinted with delicate, slightly uneven watercolour washes. Plain aged cream paper background, evenly lit, filling the whole square. One specimen, centred, the whole animal inside the frame with a generous margin. No text, no lettering, no labels, no figure numbers, no border, no frame, no caption.

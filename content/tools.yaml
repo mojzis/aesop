@@ -34,6 +34,25 @@
     pypi: https://pypi.org/project/biston/
   order: 30
 
+- id: dermestes
+  name: dermestes
+  animal: skin beetle
+  accent: "#e9e4d4"
+  tagline: Strips abstractions down to the ones that earned their keep.
+  reach_for_it: >
+    Your agent just added an ABC with one implementation, a parameter nobody
+    overrides and a wrapper that only forwards its arguments. Reports what
+    your diff introduced as deletion candidates, each ending in a `suggest:`
+    line the agent can apply. `--all` for the full audit.
+  guide: uvx dermestes@latest guide
+  install: uvx dermestes@latest
+  category: guardrails
+  links:
+    repo: https://github.com/mojzis/dermestes
+    docs: https://mojzis.github.io/dermestes/
+    pypi: https://pypi.org/project/dermestes/
+  order: 35
+
 - id: zorilla
   name: zorilla
   animal: striped polecat
