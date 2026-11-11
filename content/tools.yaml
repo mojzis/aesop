@@ -72,6 +72,24 @@
     pypi: https://pypi.org/project/zorilla/
   order: 40
 
+- id: lepisma
+  name: lepisma
+  animal: silverfish
+  accent: "#c3ccd6"
+  tagline: Nibbles at the prose your agent padded.
+  reach_for_it: >
+    Your agent writes the docs too, and they read like it: 31-word sentences,
+    noun stacks, "leverage". Soft warnings on staged Markdown, one per line,
+    for the agent to rewrite. Never blocks a commit, and stays silent rather
+    than slow.
+  guide: uvx lepisma@latest guide
+  install: uvx lepisma@latest check docs/
+  category: guardrails
+  links:
+    repo: https://github.com/mojzis/lepisma
+    pypi: https://pypi.org/project/lepisma/
+  order: 48
+
 - id: gerenuk
   name: gerenuk
   animal: gerenuk
