@@ -11,16 +11,16 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "biston>=0.7.0",
-    "gerenuk>=0.1.0",
-    "introspy>=0.3.1",
-    "madoqua>=0.2.4",
-    "pycoati>=0.2.4",
+    "biston>=0.7.6",
+    "gerenuk>=0.5.6",
+    "introspy>=0.3.7",
+    "madoqua>=0.2.11",
+    "pycoati>=0.2.13",
     "pytest>=9.1.1",
     "ruff>=0.16.6",
     "ty>=0.0.78",
-    "ty-find>=0.4.5",
-    "zorilla>=0.1.4",
+    "ty-find>=0.5.4",
+    "zorilla>=0.2.5",
 ]
 
 [project.scripts]
