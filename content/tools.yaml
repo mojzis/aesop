@@ -157,5 +157,6 @@
   category: guardrails
   links:
     repo: https://github.com/mojzis/pycoati
+    docs: https://mojzis.github.io/pycoati/
     pypi: https://pypi.org/project/pycoati/
   order: 45
