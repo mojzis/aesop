@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 from dataclasses import dataclass, field
@@ -11,6 +12,7 @@ from pathlib import Path
 import markdown
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from relnotes.notes import KIND_TITLES
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
@@ -72,6 +74,60 @@ class Tool:
         return _md.convert(self.quickstart)
 
 
+@dataclass
+class NewsItem:
+    """One released note from a tool repo (see build/news.py)."""
+
+    tool: str
+    file: str
+    date: str
+    slug: str
+    kind: str
+    body: str
+    version: str
+    released: str
+
+    @property
+    def kind_title(self) -> str:
+        return KIND_TITLES.get(self.kind, self.kind)
+
+    @property
+    def anchor(self) -> str:
+        return f"{self.tool}-{self.date}-{self.slug}"
+
+    @property
+    def body_html(self) -> str:
+        return inline_md(self.body)
+
+
+NEWS_FILE = CONTENT / "news.json"
+LATEST = 3
+
+
+def load_news(path: Path = NEWS_FILE) -> list[NewsItem]:
+    """Released notes, newest first; empty when `uv run news` has not run."""
+    if not path.exists():
+        return []
+    return [NewsItem(**n) for n in json.loads(path.read_text(encoding="utf-8"))]
+
+
+def news_line(n: NewsItem, tools: dict[str, Tool]) -> str:
+    name = tools[n.tool].name if n.tool in tools else n.tool
+    return f"- **{name} {n.version}** ({n.released}, {n.kind}): {n.body}"
+
+
+def news_md(site: dict, news: list[NewsItem], tools: dict[str, Tool]) -> str:
+    lines = [
+        "# What changed",
+        "",
+        "Release notes from every aesop tool, newest first.",
+        f"Feed: {site['base_url']}/news/feed.xml",
+        "",
+    ]
+    lines += [news_line(n, tools) for n in news] or ["Nothing yet."]
+    return "\n".join(lines) + "\n"
+
+
 def load_yaml(name: str):
     return yaml.safe_load((CONTENT / name).read_text(encoding="utf-8"))
 
@@ -101,7 +157,7 @@ def render_page(env: Environment, page: dict, **base) -> None:
     (out / "index.md").write_text(raw + "\n", encoding="utf-8")
 
 
-def tool_md(site: dict, t: Tool) -> str:
+def tool_md(site: dict, t: Tool, news: list[NewsItem] | None = None) -> str:
     lines = [
         f"# {t.name}",
         "",
@@ -129,6 +185,11 @@ def tool_md(site: dict, t: Tool) -> str:
     ]
     if t.quickstart:
         lines += ["## Quickstart", "", t.quickstart.strip(), ""]
+    mine = [n for n in news or [] if n.tool == t.id][:LATEST]
+    if mine:
+        lines += ["## Recent changes", ""]
+        lines += [f"- {n.version} ({n.released}, {n.kind}): {n.body}" for n in mine]
+        lines.append("")
     if t.links:
         lines += ["## Links", ""]
         lines += [f"- {name}: {url}" for name, url in t.links.items()]
@@ -162,6 +223,7 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
         f"- [Setup prompt: add all tools to a repo]({site['base_url']}/setup/index.md)",
         f"- [The guide principle, and a prompt to add `guide` to any CLI]"
         f"({site['base_url']}/guide/index.md)",
+        f"- [What changed: release notes of every tool]({site['base_url']}/news/index.md)",
         f"- [Everything in one file]({site['base_url']}/llms-full.txt)",
         f"- [Author](https://github.com/mojzis): {site['author']}",
         "",
@@ -172,12 +234,14 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
     return "\n".join(lines)
 
 
-def write_markdown(site: dict, tools: list[Tool]) -> None:
+def write_markdown(site: dict, tools: list[Tool], news: list[NewsItem]) -> None:
     (OUT / "llms.txt").write_text(index_md(site, tools), encoding="utf-8")
     (OUT / "index.md").write_text(index_md(site, tools), encoding="utf-8")
     (OUT / "llms-full.txt").write_text(index_md(site, tools, full=True), encoding="utf-8")
     for t in tools:
-        (OUT / t.id / "index.md").write_text(tool_md(site, t), encoding="utf-8")
+        (OUT / t.id / "index.md").write_text(tool_md(site, t, news), encoding="utf-8")
+    by_id = {t.id: t for t in tools}
+    (OUT / "news" / "index.md").write_text(news_md(site, news, by_id), encoding="utf-8")
 
 
 def main() -> None:
@@ -187,7 +251,7 @@ def main() -> None:
 
     env = Environment(
         loader=FileSystemLoader(TEMPLATES),
-        autoescape=select_autoescape(["html"]),
+        autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
         lstrip_blocks=True,
     )
@@ -195,18 +259,36 @@ def main() -> None:
     site["base_url"] = os.environ.get("BASE_URL", site["base_url"])
     tools = load_tools()
     by_category = {key: [t for t in tools if t.category == key] for key in site["categories"]}
-    base = {"site": site, "tools": tools, "by_category": by_category, "year": date.today().year}
+    news = load_news()
+    base = {
+        "site": site,
+        "tools": tools,
+        "tools_by_id": {t.id: t for t in tools},
+        "by_category": by_category,
+        "news": news,
+        "latest": news[:LATEST],
+        "year": date.today().year,
+    }
 
     render(env, "index.html", OUT / "index.html", **base)
     for page in site["pages"]:
         render_page(env, page, **base)
     for t in tools:
-        render(env, "tool.html", OUT / t.id / "index.html", tool=t, **base)
+        mine = [n for n in news if n.tool == t.id][:LATEST]
+        render(env, "tool.html", OUT / t.id / "index.html", tool=t, tool_news=mine, **base)
+    render(env, "news.html", OUT / "news" / "index.html", **base)
+    render(
+        env,
+        "feed.xml",
+        OUT / "news" / "feed.xml",
+        updated=news[0].released if news else None,
+        **base,
+    )
 
     shutil.copytree(STATIC, OUT / "static")
-    write_markdown(site, tools)
+    write_markdown(site, tools, news)
     (OUT / ".nojekyll").touch()
-    print(f"built {len(tools)} tools -> {OUT.relative_to(ROOT)}/")
+    print(f"built {len(tools)} tools, {len(news)} news -> {OUT.relative_to(ROOT)}/")
 
 
 if __name__ == "__main__":

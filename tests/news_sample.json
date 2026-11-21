@@ -1,0 +1,6 @@
+[
+ {"tool":"madoqua","file":"2026-11-20-staged-only.md","date":"2026-11-20","slug":"staged-only","kind":"changed","body":"`madoqua run` checks only the staged files, so a commit in a large repo takes 0.3 s instead of 2 s.","version":"v0.2.13","released":"2026-11-21"},
+ {"tool":"biston","file":"2026-11-19-venv.md","date":"2026-11-19","slug":"venv","kind":"fixed","body":"A `pyproject.toml` with an empty `[tool.biston]` table no longer makes `biston scan` crash.","version":"v0.7.8","released":"2026-11-20"},
+ {"tool":"gerenuk","file":"2026-11-18-json.md","date":"2026-11-18","slug":"json","kind":"added","body":"`gerenuk audit --json` prints the unused symbols as JSON, for scripts and CI.","version":"v0.5.8","released":"2026-11-19"},
+ {"tool":"madoqua","file":"2026-11-10-timings.md","date":"2026-11-10","slug":"timings","kind":"removed","body":"The `madoqua timings` command is gone; `madoqua stats` shows the same numbers.","version":"v0.2.12","released":"2026-11-12"}
+]

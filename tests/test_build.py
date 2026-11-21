@@ -1,6 +1,17 @@
 from dataclasses import replace
+from pathlib import Path
 
-from build.__main__ import Tool, index_md, inline_md, load_tools, load_yaml, page_md, tool_md
+from build.__main__ import (
+    Tool,
+    index_md,
+    inline_md,
+    load_news,
+    load_tools,
+    load_yaml,
+    news_md,
+    page_md,
+    tool_md,
+)
 
 BASE = Tool(
     id="biston",
@@ -58,3 +69,28 @@ def test_index_md_links_both_prompt_pages():
     )
     assert "https://x/setup/index.md" in md
     assert "https://x/guide/index.md" in md
+
+
+SAMPLE_NEWS = Path(__file__).parent / "news_sample.json"
+
+
+def test_load_news_missing_file_means_no_news(tmp_path):
+    assert load_news(tmp_path / "news.json") == []
+
+
+def test_news_md_lists_every_item_with_tool_version_and_kind():
+    news = load_news(SAMPLE_NEWS)
+    md = news_md(SITE, news, {"biston": BASE})
+    assert md.count("\n- ") == len(news)
+    assert "- **biston v0.7.8** (2026-11-20, fixed): A `pyproject.toml`" in md
+
+
+def test_tool_md_shows_only_that_tools_latest_changes():
+    md = tool_md(SITE, BASE, load_news(SAMPLE_NEWS))
+    assert "## Recent changes\n\n- v0.7.8 (2026-11-20, fixed)" in md
+    assert "madoqua" not in md
+
+
+def test_news_item_anchor_is_unique_per_tool_and_note():
+    anchors = [n.anchor for n in load_news(SAMPLE_NEWS)]
+    assert len(set(anchors)) == len(anchors)

@@ -12,6 +12,16 @@
   </div>
 </section>
 
+{% if latest %}
+<section id="latest" class="latest">
+  <h2 class="category">Latest changes</h2>
+  <ul class="news-list">
+    {% for n in latest %}{% include "_news_item.html" %}{% endfor %}
+  </ul>
+  <a class="small" href="{{ site.base_url }}/news/">All release notes →</a>
+</section>
+{% endif %}
+
 <section id="tools">
   {% for key, label in site.categories.items() %}
   {% if by_category[key] %}

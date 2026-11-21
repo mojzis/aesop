@@ -8,6 +8,7 @@ Static site: `content/site.yaml` + `content/tools.yaml` → `build/__main__.py` 
 - Every HTML page has a Markdown sibling (`index.md`) plus `llms.txt` / `llms-full.txt`, all emitted by `write_markdown`. Keep them in sync when adding fields.
 - `site/` is generated, gitignored. Never edit it.
 - Links use `{{ site.base_url }}` prefix (GitHub Pages project subpath). Keep it.
+- News (release notes): `uv run python -m build.news` clones each tool repo (`links.repo`) into `.cache/repos/` and writes `content/news.json` (gitignored) with the notes that shipped in a tag, via [relnotes](https://github.com/mojzis/relnotes) (`relnotes.notes.collect`). Build → 3 latest on the home page, 3 per tool page, `/news/` (tool/kind filter, `?tool=`), `/news/feed.xml`, `/news/index.md`. No JSON → no news blocks. Deploy runs the pull; a tool release triggers deploy via `workflow_dispatch`.
 - `content/tools.yaml` is the single source of truth for tool copy. Keys: id, name, animal, honorary, accent, tagline, reach_for_it, guide, install, category, links, order, quickstart (md), mascot, demo.
 
 ## Toolbox
