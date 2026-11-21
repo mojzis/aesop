@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ site.base_url }}/static/css/main.css">
+  {% block head %}<link rel="alternate" type="application/atom+xml" title="aesop: what changed" href="{{ site.base_url }}/news/feed.xml">{% endblock %}
 </head>
 <body>
   <header class="nav">
@@ -30,6 +31,7 @@
       {% for p in site.pages %}
       <a href="{{ site.base_url }}/{{ p.id }}/">{{ p.nav }}</a>
       {% endfor %}
+      <a href="{{ site.base_url }}/news/">News</a>
       <a href="{{ site.base_url }}/llms.txt">llms.txt</a>
       {% for name, url in site.links.items() %}
       <a href="{{ url }}" target="_blank" rel="noopener">{{ name }}</a>

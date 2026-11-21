@@ -35,6 +35,16 @@
     {% endif %}
   </section>
 
+  {% if tool_news %}
+  <section class="prose tool-news">
+    <h2>Recent changes</h2>
+    <ul class="news-list">
+      {% for n in tool_news %}{% include "_news_item.html" %}{% endfor %}
+    </ul>
+    <a class="small" href="{{ site.base_url }}/news/?tool={{ tool.id }}">All {{ tool.name }} release notes →</a>
+  </section>
+  {% endif %}
+
   <section class="links">
     {% for name, url in tool.links.items() %}
     <a href="{{ url }}" target="_blank" rel="noopener">{{ name }} ↗</a>

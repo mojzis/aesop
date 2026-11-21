@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% set page_title = "what changed" %}
+{% set page_description = "Release notes from every aesop tool, newest first." %}
+{% set page_path = "/news/" %}
+{% block head %}<link rel="alternate" type="application/atom+xml" title="aesop: what changed" href="{{ site.base_url }}/news/feed.xml">{% endblock %}
+{% block content %}
+<article class="page news-page">
+  <a class="back" href="{{ site.base_url }}/">← all tools</a>
+  <h1>What changed</h1>
+  <p class="lede">Release notes from every tool, newest first. Each entry is one change you can notice. <a href="{{ site.base_url }}/news/feed.xml">Atom feed</a></p>
+
+  {% if news %}
+  <form class="news-filter" aria-label="Filter release notes">
+    <label>Tool
+      <select name="tool">
+        <option value="">all tools</option>
+        {% for t in tools %}{% if news | selectattr("tool", "equalto", t.id) | list %}
+        <option value="{{ t.id }}">{{ t.name }}</option>
+        {% endif %}{% endfor %}
+      </select>
+    </label>
+    <label>Kind
+      <select name="kind">
+        <option value="">all kinds</option>
+        <option value="added">Added</option>
+        <option value="changed">Changed</option>
+        <option value="fixed">Fixed</option>
+        <option value="removed">Removed</option>
+      </select>
+    </label>
+    <span class="muted small news-count" aria-live="polite"></span>
+  </form>
+  <ul class="news-list">
+    {% for n in news %}{% include "_news_item.html" %}{% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">Nothing yet.</p>
+  {% endif %}
+</article>
+{% endblock %}

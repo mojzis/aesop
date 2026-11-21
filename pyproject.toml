@@ -7,6 +7,7 @@ dependencies = [
     "jinja2>=3.1.6",
     "markdown>=3.10.3",
     "pyyaml>=6.0.3",
+    "relnotes",
 ]
 
 [dependency-groups]
@@ -51,4 +52,7 @@ extend_check = [
 ]
 
 [tool.biston.scan]
-exclude = ["site/**", ".venv/**"]
+exclude = ["site/**", ".venv/**", ".cache/**"]
+
+[tool.uv.sources]
+relnotes = { git = "https://github.com/mojzis/relnotes" }

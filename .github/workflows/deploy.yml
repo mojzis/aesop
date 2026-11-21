@@ -21,6 +21,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --frozen
+      # Release notes from every tool repo (relnotes); a tool release triggers this
+      # workflow via workflow_dispatch so the site picks the notes up.
+      - run: uv run python -m build.news
       - run: uv run build
       - uses: actions/upload-pages-artifact@v3
         with:
