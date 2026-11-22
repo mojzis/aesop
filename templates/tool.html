@@ -1,13 +1,11 @@
 {% extends "base.html" %}
-{% set page_title = tool.name %}
-{% set page_description = tool.tagline %}
-{% set page_path = tool.href %}
-{% set page_image = tool.og_image %}
+{% set tool = page.tool %}
+{% set tool_news = page.tool_news %}
 {% block content %}
 <article class="tool" style="--accent: {{ tool.accent }}">
-  <a class="back" href="{{ site.base_url }}/#tools">← all tools</a>
+  <a class="back" href="{{ url('') }}#tools">← all tools</a>
   <div class="tool-hero">
-    <img class="mascot big" src="{{ site.base_url }}{{ tool.mascot_path }}" alt="{{ tool.animal }}" width="220" height="220">
+    <img class="mascot big" src="{{ url(tool.mascot_path) }}" alt="{{ tool.animal }}" width="220" height="220">
     <div>
       <p class="animal">{{ tool.animal }}{% if tool.honorary %} <span class="muted">(honorary)</span>{% endif %}</p>
       <h1>{{ tool.name }}</h1>
@@ -31,7 +29,7 @@
     {% endif %}
     {% if tool.demo %}
     <h2>Demo</h2>
-    <img class="demo" src="{{ site.base_url }}/static/img/{{ tool.demo }}" alt="{{ tool.name }} demo">
+    <img class="demo" src="{{ url('static/img/' ~ tool.demo) }}" alt="{{ tool.name }} demo">
     {% endif %}
   </section>
 
@@ -41,7 +39,7 @@
     <ul class="news-list">
       {% for n in tool_news %}{% include "_news_item.html" %}{% endfor %}
     </ul>
-    <a class="small" href="{{ site.base_url }}/news/?tool={{ tool.id }}">All {{ tool.name }} release notes →</a>
+    <a class="small" href="{{ url('news/?tool=' ~ tool.id) }}">All {{ tool.name }} release notes →</a>
   </section>
   {% endif %}
 

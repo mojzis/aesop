@@ -15,6 +15,7 @@ import json
 import sys
 from pathlib import Path
 
+import deedum
 import yaml
 
 HERE = Path(__file__).parent
@@ -52,7 +53,7 @@ def head_hbs(tool: dict, base_url: str) -> str:
 
 def main() -> int:
     check = "--check" in sys.argv
-    site = yaml.safe_load((ROOT / "content/site.yaml").read_text())
+    base_url = deedum.load_site(ROOT).absolute("").rstrip("/")
     tools = yaml.safe_load((ROOT / "content/tools.yaml").read_text())
     css = (HERE / "aesop-docs.css").read_text()
     js = (HERE / "aesop-docs.js").read_text()
@@ -65,7 +66,7 @@ def main() -> int:
         wanted = {
             docs / "custom.css": css,
             docs / "aesop.js": js,
-            docs / "theme/head.hbs": head_hbs(tool, site["base_url"]),
+            docs / "theme/head.hbs": head_hbs(tool, base_url),
         }
         changed = [p for p, text in wanted.items() if not p.exists() or p.read_text() != text]
         if not check:

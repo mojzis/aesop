@@ -1,7 +1,12 @@
 from dataclasses import replace
 from pathlib import Path
 
-from build.__main__ import (
+import deedum
+from deedum.app import build
+from deedum.check import check_folder
+
+from build.aesop import (
+    ROOT,
     Tool,
     index_md,
     inline_md,
@@ -34,7 +39,6 @@ def test_inline_md_strips_wrapping_paragraph():
 def test_tool_paths_derive_from_id():
     assert BASE.href == "/biston/"  # zorilla: ignore[ZR005]
     assert BASE.mascot_path == "/static/img/biston.webp"  # zorilla: ignore[ZR005]
-    assert BASE.og_image == "/static/img/biston-og.png"  # zorilla: ignore[ZR005]
 
 
 def test_tool_md_has_guide_before_install():
@@ -94,3 +98,14 @@ def test_tool_md_shows_only_that_tools_latest_changes():
 def test_news_item_anchor_is_unique_per_tool_and_note():
     anchors = [n.anchor for n in load_news(SAMPLE_NEWS)]
     assert len(set(anchors)) == len(anchors)
+
+
+def test_full_build_writes_pages_markdown_siblings_and_curated_llms(tmp_path):
+    out = tmp_path / "site"
+    report = build(deedum.load_site(ROOT), out)
+    assert report.pages > len(load_tools())
+    assert (out / "biston" / "index.md").read_text().startswith("# biston\n")
+    llms = (out / "llms.txt").read_text()
+    assert "Run `uvx <tool>@latest guide`" in llms
+    assert (out / "static" / "css" / "main.css").exists()
+    assert check_folder(out, "/aesop/").errors == 0

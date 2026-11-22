@@ -1,7 +1,7 @@
 {% set t = tools_by_id.get(n.tool) %}
 <li class="news-item" id="{{ n.anchor }}" data-tool="{{ n.tool }}" data-kind="{{ n.kind }}"{% if t %} style="--accent: {{ t.accent }}"{% endif %}>
   <div class="news-meta">
-    {% if t %}<a class="news-tool" href="{{ site.base_url }}{{ t.href }}">{{ t.name }}</a>{% else %}<span class="news-tool">{{ n.tool }}</span>{% endif %}
+    {% if t %}<a class="news-tool" href="{{ url(t.href) }}">{{ t.name }}</a>{% else %}<span class="news-tool">{{ n.tool }}</span>{% endif %}
     <span class="news-version">{{ n.version }}</span>
     <span class="news-kind kind-{{ n.kind }}">{{ n.kind_title }}</span>
     <time datetime="{{ n.released }}">{{ n.released }}</time>

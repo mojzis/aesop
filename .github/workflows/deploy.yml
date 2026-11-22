@@ -24,7 +24,7 @@ jobs:
       # Release notes from every tool repo (relnotes); a tool release triggers this
       # workflow via workflow_dispatch so the site picks the notes up.
       - run: uv run python -m build.news
-      - run: uv run build
+      - run: uv run deedum build --check
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

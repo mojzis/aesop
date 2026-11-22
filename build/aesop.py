@@ -1,24 +1,24 @@
-"""Static site generator: content/*.yaml + templates/ -> site/."""
+"""aesop as a deedum App: content/*.yaml + templates/ -> site/ (`uv run deedum build`).
+
+deedum writes the head, sitemap, robots, icons and the `index.md` sibling of every
+page (each page's `source`). The curated `llms.txt` / `llms-full.txt` replace
+deedum's generic ones in `after_build`.
+"""
 
 from __future__ import annotations
 
 import json
-import os
-import shutil
 from dataclasses import dataclass, field
-from datetime import date
 from pathlib import Path
+from typing import Any
 
+import deedum
 import markdown
 import yaml
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 from relnotes.notes import KIND_TITLES
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
-TEMPLATES = ROOT / "templates"
-STATIC = ROOT / "static"
-OUT = ROOT / "site"
 
 _md = markdown.Markdown(extensions=["fenced_code"])
 
@@ -30,6 +30,11 @@ def inline_md(text: str) -> str:
     if html.startswith("<p>") and html.endswith("</p>"):
         html = html[3:-4]
     return html
+
+
+def block_md(text: str) -> str:
+    _md.reset()
+    return _md.convert(text)
 
 
 @dataclass
@@ -59,10 +64,6 @@ class Tool:
         return f"/static/img/{self.mascot or self.id + '.webp'}"
 
     @property
-    def og_image(self) -> str:
-        return f"/static/img/{self.id}-og.png"
-
-    @property
     def reach_html(self) -> str:
         return inline_md(self.reach_for_it)
 
@@ -70,8 +71,7 @@ class Tool:
     def quickstart_html(self) -> str | None:
         if not self.quickstart:
             return None
-        _md.reset()
-        return _md.convert(self.quickstart)
+        return block_md(self.quickstart)
 
 
 @dataclass
@@ -128,33 +128,19 @@ def news_md(site: dict, news: list[NewsItem], tools: dict[str, Tool]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def load_yaml(name: str):
+def load_yaml(name: str) -> Any:
     return yaml.safe_load((CONTENT / name).read_text(encoding="utf-8"))
 
 
-def load_tools() -> list[Tool]:
-    tools = [Tool(**t) for t in load_yaml("tools.yaml")]
+def load_tools(raw: list[dict] | None = None) -> list[Tool]:
+    tools = [Tool(**t) for t in (load_yaml("tools.yaml") if raw is None else raw)]
     tools.sort(key=lambda t: t.order)
     return tools
-
-
-def render(env: Environment, template: str, out: Path, **ctx) -> None:
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(env.get_template(template).render(**ctx), encoding="utf-8")
 
 
 def page_md(page_id: str) -> str:
     """Raw Markdown of a prompt page (content/<id>.md); served verbatim as index.md."""
     return (CONTENT / f"{page_id}.md").read_text(encoding="utf-8").strip()
-
-
-def render_page(env: Environment, page: dict, **base) -> None:
-    """One prompt page: content/<id>.md -> /<id>/index.html + /<id>/index.md."""
-    raw = page_md(page["id"])
-    _md.reset()
-    out = OUT / page["id"]
-    render(env, "page.html", out / "index.html", page=page, raw=raw, html=_md.convert(raw), **base)
-    (out / "index.md").write_text(raw + "\n", encoding="utf-8")
 
 
 def tool_md(site: dict, t: Tool, news: list[NewsItem] | None = None) -> str:
@@ -234,62 +220,95 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
     return "\n".join(lines)
 
 
-def write_markdown(site: dict, tools: list[Tool], news: list[NewsItem]) -> None:
-    (OUT / "llms.txt").write_text(index_md(site, tools), encoding="utf-8")
-    (OUT / "index.md").write_text(index_md(site, tools), encoding="utf-8")
-    (OUT / "llms-full.txt").write_text(index_md(site, tools, full=True), encoding="utf-8")
-    for t in tools:
-        (OUT / t.id / "index.md").write_text(tool_md(site, t, news), encoding="utf-8")
-    by_id = {t.id: t for t in tools}
-    (OUT / "news" / "index.md").write_text(news_md(site, news, by_id), encoding="utf-8")
+class Aesop(deedum.App):
+    """Pages from content/site.yaml, tools.yaml, <page>.md and news.json."""
 
+    def __init__(self, site: deedum.Site) -> None:
+        super().__init__(site)
+        self.copy: dict[str, Any] = {
+            **self.data["site"],
+            "title": site.title,
+            "author": site.author,
+            "base_url": site.absolute("").rstrip("/"),
+        }
+        self.tools = load_tools(self.data["tools"])
+        self.news = load_news()
 
-def main() -> None:
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    OUT.mkdir()
+    def tool_news(self, tool: Tool) -> list[NewsItem]:
+        return [n for n in self.news if n.tool == tool.id][:LATEST]
 
-    env = Environment(
-        loader=FileSystemLoader(TEMPLATES),
-        autoescape=select_autoescape(["html", "xml"]),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    site = load_yaml("site.yaml")
-    site["base_url"] = os.environ.get("BASE_URL", site["base_url"])
-    tools = load_tools()
-    by_category = {key: [t for t in tools if t.category == key] for key in site["categories"]}
-    news = load_news()
-    base = {
-        "site": site,
-        "tools": tools,
-        "tools_by_id": {t.id: t for t in tools},
-        "by_category": by_category,
-        "news": news,
-        "latest": news[:LATEST],
-        "year": date.today().year,
-    }
+    def load_pages(self) -> list[deedum.Page]:
+        copy, site = self.copy, self.site
+        by_id = {t.id: t for t in self.tools}
+        pages = [
+            self.page(
+                "",
+                title=site.title,
+                description=site.description,
+                template="index.html",
+                source=index_md(copy, self.tools),
+            )
+        ]
+        for entry in copy["pages"]:
+            raw = page_md(entry["id"])
+            meta = {k: v for k, v in entry.items() if k not in ("title", "description")}
+            pages.append(
+                self.page(
+                    f"{entry['id']}/",
+                    title=entry["page_title"],
+                    description=entry["description"],
+                    heading=entry["title"],
+                    body=block_md(raw),
+                    source=raw + "\n",
+                    **meta,
+                )
+            )
+        for t in self.tools:
+            pages.append(
+                self.page(
+                    t.href.lstrip("/"),
+                    title=t.name,
+                    description=t.tagline,
+                    image=t.mascot_path.lstrip("/"),
+                    template="tool.html",
+                    source=tool_md(copy, t, self.news),
+                    tool=t,
+                    tool_news=self.tool_news(t),
+                )
+            )
+        pages.append(
+            self.page(
+                "news/",
+                title="what changed",
+                description="Release notes from every aesop tool, newest first.",
+                template="news.html",
+                source=news_md(copy, self.news, by_id),
+            )
+        )
+        pages.append(
+            self.page(
+                "news/feed.xml",
+                title="what changed",
+                template="feed.xml",
+                updated_on=self.news[0].released if self.news else None,
+            )
+        )
+        return pages
 
-    render(env, "index.html", OUT / "index.html", **base)
-    for page in site["pages"]:
-        render_page(env, page, **base)
-    for t in tools:
-        mine = [n for n in news if n.tool == t.id][:LATEST]
-        render(env, "tool.html", OUT / t.id / "index.html", tool=t, tool_news=mine, **base)
-    render(env, "news.html", OUT / "news" / "index.html", **base)
-    render(
-        env,
-        "feed.xml",
-        OUT / "news" / "feed.xml",
-        updated=news[0].released if news else None,
-        **base,
-    )
+    def globals(self) -> dict[str, Any]:
+        return {
+            "aesop": self.copy,
+            "tools": self.tools,
+            "tools_by_id": {t.id: t for t in self.tools},
+            "by_category": {
+                key: [t for t in self.tools if t.category == key] for key in self.copy["categories"]
+            },
+            "news": self.news,
+            "latest": self.news[:LATEST],
+        }
 
-    shutil.copytree(STATIC, OUT / "static")
-    write_markdown(site, tools, news)
-    (OUT / ".nojekyll").touch()
-    print(f"built {len(tools)} tools, {len(news)} news -> {OUT.relative_to(ROOT)}/")
-
-
-if __name__ == "__main__":
-    main()
+    def after_build(self, out: Path) -> None:
+        """Replace deedum's generic llms files with the curated ones."""
+        (out / "llms.txt").write_text(index_md(self.copy, self.tools), encoding="utf-8")
+        full = index_md(self.copy, self.tools, full=True)
+        (out / "llms-full.txt").write_text(full, encoding="utf-8")
