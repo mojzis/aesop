@@ -8,9 +8,10 @@
 
     uv run --env-file ../cecil/.env art/generate.py [id ...]   # REPLICATE_API_TOKEN
 
-Pick a roll with art/pick.sh <id> <stamp>.
+Style and prompt templates: art/STYLE.md. Pick a roll with art/pick.sh <id> <stamp>.
 """
 
+import re
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -19,21 +20,20 @@ from pathlib import Path
 import yaml
 from imgen import generate_to  # ty: ignore[unresolved-import]  -- PEP 723 dep, not in the venv
 
-STYLE = (
-    "Natural history illustration from a 19th-century zoology book: {subject}. "
-    "Fine black ink line drawing with pen hatching, hand-tinted with delicate, "
-    "slightly uneven watercolour washes. Plain aged cream paper background, evenly "
-    "lit, filling the whole square. One specimen, centred, the whole animal inside "
-    "the frame with a generous margin. No text, no lettering, no labels, no figure "
-    "numbers, no border, no frame, no caption."
-)
-
-SUBJECTS = yaml.safe_load((Path(__file__).parent / "subjects.yaml").read_text())
+ART = Path(__file__).parent
+IMG = ART.parent / "public" / "static" / "img"
+# The two prompt templates (plate, group plate) are the ```text blocks in STYLE.md.
+PLATE, GROUP = re.findall(r"```text\n(.*?)\n```", (ART / "STYLE.md").read_text(), re.S)
+SUBJECTS = yaml.safe_load((ART / "subjects.yaml").read_text())
 
 
 def roll(tool: str) -> Path:
-    out = Path(__file__).parent / "rolls" / tool / f"{time.strftime('%Y%m%d-%H%M%S')}.png"
-    return generate_to(out, STYLE.format(subject=SUBJECTS[tool]), aspect="1:1")
+    out = ART / "rolls" / tool / f"{time.strftime('%Y%m%d-%H%M%S')}.png"
+    subject = SUBJECTS[tool]
+    if isinstance(subject, str):
+        return generate_to(out, PLATE.format(subject=subject), aspect="1:1")
+    refs = [IMG / f"{r}.webp" for r in subject["refs"]]
+    return generate_to(out, GROUP.format(subject=subject["scene"]), aspect="16:9", refs=refs)
 
 
 if __name__ == "__main__":

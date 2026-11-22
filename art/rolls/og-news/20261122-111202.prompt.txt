@@ -1,0 +1,5 @@
+# model: google/nano-banana
+# aspect: 16:9
+# refs: gerenuk.webp, madoqua.webp, pycoati.webp, zorilla.webp, biston.webp
+
+Natural history illustration from a 19th-century zoology book, a plate showing several species together: a procession of animals walking left to right in side view: a gerenuk leading with its long neck raised, then a dik-dik, a ring-tailed coati with its tail up and a striped polecat; a peppered moth flies ahead of them in the upper right. Each animal drawn exactly as in the reference plates. Fine black ink line drawing with pen hatching, hand-tinted with delicate, slightly uneven watercolour washes. Plain aged cream paper background, evenly lit, filling the whole wide frame. Every animal entirely inside the frame with a generous margin, no overlapping bodies. No text, no lettering, no labels, no figure numbers, no border, no frame, no caption.

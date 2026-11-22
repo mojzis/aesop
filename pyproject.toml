@@ -32,6 +32,7 @@ base_path = "/aesop/"
 description = "Fast CLI tools for agentic Python development. Each one teaches your agent how to use it."
 author = "@mojzis"
 favicon = "public/static/img/favicon.svg"
+image = "static/img/og-home.webp"
 theme_color = "#1a1d21"
 llms = true
 app = "build.aesop:Aesop"

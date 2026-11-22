@@ -17,3 +17,30 @@ introspect: >-
 lepisma: >-
   a silverfish (Lepisma saccharina), dorsal view, tapered silvery-grey scaled body, two long antennae
   and three long tail bristles
+
+# Group plates (STYLE.md, "Group plate"): og:images for the pages that are not one tool.
+og-home:
+  scene: >-
+    the whole menagerie in one field-guide plate. Across the bottom, standing in a row in side view:
+    a gerenuk, a dik-dik, a ring-tailed coati, a striped polecat, and a little owl on a short stump.
+    Above them, smaller, as pinned specimens in dorsal view: a peppered moth, a skin beetle, a silverfish,
+    and a tarsier clinging to a thin branch at one side
+  refs: [gerenuk, madoqua, pycoati, zorilla, introspect, biston, dermestes, lepisma, ty-find]
+og-setup:
+  scene: >-
+    a complete set laid out in neat order like a collector's tray: the insects (a peppered moth, a skin
+    beetle, a silverfish) in an even row along the top in dorsal view, and below them a gerenuk, a dik-dik,
+    a ring-tailed coati and a striped polecat standing side by side, evenly spaced, all facing the same way
+  refs: [biston, dermestes, lepisma, gerenuk, madoqua, pycoati, zorilla]
+og-guide:
+  scene: >-
+    a little owl perched on a short stump in the centre, facing the viewer, while a dik-dik, a ring-tailed
+    coati, a striped polecat and a tarsier on a branch sit around it, all turned attentively toward the owl,
+    as if listening
+  refs: [introspect, madoqua, pycoati, zorilla, ty-find]
+og-news:
+  scene: >-
+    a procession of animals walking left to right in side view: a gerenuk leading with its long neck raised,
+    then a dik-dik, a ring-tailed coati with its tail up and a striped polecat; a peppered moth flies ahead
+    of them in the upper right
+  refs: [gerenuk, madoqua, pycoati, zorilla, biston]

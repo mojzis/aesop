@@ -12,6 +12,7 @@ Static site built with [deedum](https://github.com/mojzis/deedum) (`uv run deedu
 - `site/` is generated, gitignored. Never edit it.
 - Links in templates go through `{{ url('path/') }}` (adds `/aesop/`), absolute ones through `{{ absolute('path') }}`. Never hardcode the prefix. `url('#x')` is passed through as-is: write `{{ url('') }}#x`.
 - News (release notes): `uv run python -m build.news` clones each tool repo (`links.repo`) into `.cache/repos/` and writes `content/news.json` (gitignored) with the notes that shipped in a tag, via [relnotes](https://github.com/mojzis/relnotes) (`relnotes.notes.collect`). Build → 3 latest on the home page, 3 per tool page, `/news/` (tool/kind filter, `?tool=`), `/news/feed.xml`, `/news/index.md`. No JSON → no news blocks. The feed is a page with `template="feed.xml"`. Deploy runs the pull; a tool release triggers deploy via `workflow_dispatch`.
+- Art: every image follows [`art/STYLE.md`](art/STYLE.md) (19th-century natural history plates; the prompt templates `art/generate.py` uses). Read it before generating or changing any image. Subjects in `art/subjects.yaml`; `art/pick.sh` publishes a roll to `public/static/img/`. Tool pages use the square mascot as og:image, the common pages a 1200×630 group plate `og-<page>.webp` (`og-home` is the site default, `image` in `[tool.deedum]`).
 - `content/tools.yaml` is the single source of truth for tool copy. Keys: id, name, animal, honorary, accent, tagline, reach_for_it, guide, install, category, links, order, quickstart (md), mascot, demo.
 
 ## Toolbox
