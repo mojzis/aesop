@@ -1,0 +1,5 @@
+# model: google/nano-banana
+# aspect: 16:9
+# refs: gerenuk.webp, madoqua.webp, pycoati.webp, zorilla.webp, introspect.webp, biston.webp, dermestes.webp, lepisma.webp, ty-find.webp
+
+Natural history illustration from a 19th-century zoology book, a plate showing several species together: the whole menagerie in one field-guide plate. Across the bottom, standing in a row in side view: a gerenuk, a dik-dik, a ring-tailed coati, a striped polecat, and a little owl on a short stump. Above them, smaller, as pinned specimens in dorsal view: a peppered moth, a skin beetle, a silverfish, and a tarsier clinging to a thin branch at one side. Each animal drawn exactly as in the reference plates. Fine black ink line drawing with pen hatching, hand-tinted with delicate, slightly uneven watercolour washes. Plain aged cream paper background, evenly lit, filling the whole wide frame. Every animal entirely inside the frame with a generous margin, no overlapping bodies. No text, no lettering, no labels, no figure numbers, no border, no frame, no caption.

@@ -1,0 +1,5 @@
+# model: google/nano-banana
+# aspect: 16:9
+# refs: introspect.webp, madoqua.webp, pycoati.webp, zorilla.webp, ty-find.webp
+
+Natural history illustration from a 19th-century zoology book, a plate showing several species together: a little owl perched on a short stump in the centre, facing the viewer, while a dik-dik, a ring-tailed coati, a striped polecat and a tarsier on a branch sit around it, all turned attentively toward the owl, as if listening. Each animal drawn exactly as in the reference plates. Fine black ink line drawing with pen hatching, hand-tinted with delicate, slightly uneven watercolour washes. Plain aged cream paper background, evenly lit, filling the whole wide frame. Every animal entirely inside the frame with a generous margin, no overlapping bodies. No text, no lettering, no labels, no figure numbers, no border, no frame, no caption.

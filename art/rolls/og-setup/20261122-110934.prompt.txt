@@ -1,0 +1,5 @@
+# model: google/nano-banana
+# aspect: 16:9
+# refs: biston.webp, dermestes.webp, lepisma.webp, gerenuk.webp, madoqua.webp, pycoati.webp, zorilla.webp
+
+Natural history illustration from a 19th-century zoology book, a plate showing several species together: a complete set laid out in neat order like a collector's tray: the insects (a peppered moth, a skin beetle, a silverfish) in an even row along the top in dorsal view, and below them a gerenuk, a dik-dik, a ring-tailed coati and a striped polecat standing side by side, evenly spaced, all facing the same way. Each animal drawn exactly as in the reference plates. Fine black ink line drawing with pen hatching, hand-tinted with delicate, slightly uneven watercolour washes. Plain aged cream paper background, evenly lit, filling the whole wide frame. Every animal entirely inside the frame with a generous margin, no overlapping bodies. No text, no lettering, no labels, no figure numbers, no border, no frame, no caption.

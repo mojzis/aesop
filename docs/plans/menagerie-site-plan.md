@@ -55,8 +55,8 @@ Per-tool pages double as each tool's real landing page, which sidesteps the "doc
 
 ## Imagery
 
-- One mascot per tool, single consistent style (see image-prompts artifact). Reused as og:image, in repo READMEs, and in LinkedIn posts.
-- og:image needs 1200×630; generate mascots on a background canvas at that ratio (or compose: mascot left, name + tagline right).
+- One mascot per tool, single consistent style: 19th-century natural history plates. Style, prompt templates and workflow: [`art/STYLE.md`](../../art/STYLE.md); subjects in `art/subjects.yaml`. Reused as og:image, in repo READMEs, and in LinkedIn posts.
+- og:image: tool pages use their square mascot; the common pages (home, setup, guide, news) get a 1200×630 group plate of the menagerie (`og-<page>.webp`, same file). The home plate is the site-wide default.
 - Terminal demos via VHS (charmbracelet): one `.tape` per tool, rendered in CI so gifs regenerate when output changes. Phase 2 — don't block v1 on it.
 
 ## LinkedIn cadence

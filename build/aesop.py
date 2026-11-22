@@ -281,6 +281,7 @@ class Aesop(deedum.App):
                 "news/",
                 title="what changed",
                 description="Release notes from every aesop tool, newest first.",
+                image="static/img/og-news.webp",
                 template="news.html",
                 source=news_md(copy, self.news, by_id),
             )
