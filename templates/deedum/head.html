@@ -1,0 +1,13 @@
+{% extends "builtin/deedum/head.html" %}
+{# Home keeps the tagline in its title; every other page uses deedum's "title | site". #}
+{% block meta %}
+{% if page.url == "" %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ site.title }} — {{ aesop.tagline }}</title>
+<meta name="description" content="{{ page.description }}">
+<link rel="canonical" href="{{ absolute(page.url) }}">
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}

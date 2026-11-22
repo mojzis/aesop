@@ -1,14 +1,17 @@
 # aesop
 
-Static site: `content/site.yaml` + `content/tools.yaml` → `build/__main__.py` (Jinja2) → `site/`. Plan in `docs/plans/`.
+Static site built with [deedum](https://github.com/mojzis/deedum) (`uv run deedum guide`): `content/site.yaml` + `content/tools.yaml` → `build/aesop.py` (`Aesop(deedum.App)`, named in `[tool.deedum] app`) → `site/`. Plan in `docs/plans/`.
 
-- Build: `uv run build`. Local preview: `BASE_URL= uv run build && python -m http.server -d site 8000`.
+- Build: `uv run deedum build --check`. Local preview: `uv run deedum serve`.
+- Site config (title, description, author, `base_url` host + `base_path = "/aesop/"`, favicon) lives in `[tool.deedum]` in `pyproject.toml`; `content/site.yaml` keeps only aesop copy (exposed to templates as `aesop`, while `site` is deedum's `Site`). Data folder is `content/`.
+- deedum owns the `<head>` (`templates/base.html` includes `deedum/head.html`; `templates/deedum/head.html` overrides the home title), sitemap, robots, favicons from `public/static/img/favicon.svg`, 404 and the `index.md` siblings (each page's `source`).
+- `public/` is the static folder; `public/static/` keeps assets at `/static/...`.
 - Lint: `uv run ruff check . && uv run ruff format .`. Tests: `uv run pytest`.
 - Prompt pages: `site.yaml` `pages:` list → `content/<id>.md` → `/<id>/` (HTML via `templates/page.html`) + raw `/<id>/index.md`. `setup` = install-everything prompt; `guide` = the guide-subcommand principle + a prompt to add it to any CLI.
-- Every HTML page has a Markdown sibling (`index.md`) plus `llms.txt` / `llms-full.txt`, all emitted by `write_markdown`. Keep them in sync when adding fields.
+- Every HTML page has a Markdown sibling (`index.md`): the `source=` given in `Aesop.load_pages` (`tool_md`, `index_md`, `news_md`, raw page md). `llms.txt` / `llms-full.txt` are the curated `index_md`, written over deedum's generic ones in `Aesop.after_build`. Keep them in sync when adding fields.
 - `site/` is generated, gitignored. Never edit it.
-- Links use `{{ site.base_url }}` prefix (GitHub Pages project subpath). Keep it.
-- News (release notes): `uv run python -m build.news` clones each tool repo (`links.repo`) into `.cache/repos/` and writes `content/news.json` (gitignored) with the notes that shipped in a tag, via [relnotes](https://github.com/mojzis/relnotes) (`relnotes.notes.collect`). Build → 3 latest on the home page, 3 per tool page, `/news/` (tool/kind filter, `?tool=`), `/news/feed.xml`, `/news/index.md`. No JSON → no news blocks. Deploy runs the pull; a tool release triggers deploy via `workflow_dispatch`.
+- Links in templates go through `{{ url('path/') }}` (adds `/aesop/`), absolute ones through `{{ absolute('path') }}`. Never hardcode the prefix. `url('#x')` is passed through as-is: write `{{ url('') }}#x`.
+- News (release notes): `uv run python -m build.news` clones each tool repo (`links.repo`) into `.cache/repos/` and writes `content/news.json` (gitignored) with the notes that shipped in a tag, via [relnotes](https://github.com/mojzis/relnotes) (`relnotes.notes.collect`). Build → 3 latest on the home page, 3 per tool page, `/news/` (tool/kind filter, `?tool=`), `/news/feed.xml`, `/news/index.md`. No JSON → no news blocks. The feed is a page with `template="feed.xml"`. Deploy runs the pull; a tool release triggers deploy via `workflow_dispatch`.
 - `content/tools.yaml` is the single source of truth for tool copy. Keys: id, name, animal, honorary, accent, tagline, reach_for_it, guide, install, category, links, order, quickstart (md), mascot, demo.
 
 ## Toolbox

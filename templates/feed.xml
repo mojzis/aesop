@@ -2,17 +2,17 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>{{ site.title }}: what changed</title>
   <subtitle>Release notes from every aesop tool.</subtitle>
-  <id>{{ site.base_url }}/news/</id>
-  <link rel="alternate" href="{{ site.base_url }}/news/"/>
-  <link rel="self" href="{{ site.base_url }}/news/feed.xml"/>
-  <updated>{{ updated or "1970-01-01" }}T00:00:00Z</updated>
+  <id>{{ absolute('news/') }}</id>
+  <link rel="alternate" href="{{ absolute('news/') }}"/>
+  <link rel="self" href="{{ absolute('news/feed.xml') }}"/>
+  <updated>{{ page.updated_on or "1970-01-01" }}T00:00:00Z</updated>
   <author><name>{{ site.author }}</name></author>
 {% for n in news[:50] %}
 {% set t = tools_by_id.get(n.tool) %}
   <entry>
     <title>{{ t.name if t else n.tool }} {{ n.version }}: {{ n.kind_title | lower }}</title>
-    <id>{{ site.base_url }}/news/#{{ n.anchor }}</id>
-    <link rel="alternate" href="{{ site.base_url }}/news/#{{ n.anchor }}"/>
+    <id>{{ absolute('news/') }}#{{ n.anchor }}</id>
+    <link rel="alternate" href="{{ absolute('news/') }}#{{ n.anchor }}"/>
     <updated>{{ n.released }}T00:00:00Z</updated>
     <content type="html">{{ n.body_html }}</content>
   </entry>

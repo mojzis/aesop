@@ -1,9 +1,10 @@
 [project]
 name = "aesop"
 version = "0.1.0"
-description = "Static portfolio site generated with Python + Jinja2"
+description = "Static portfolio site built with deedum"
 requires-python = ">=3.14"
 dependencies = [
+    "deedum",
     "jinja2>=3.1.6",
     "markdown>=3.10.3",
     "pyyaml>=6.0.3",
@@ -24,8 +25,19 @@ dev = [
     "zorilla>=0.2.6",
 ]
 
-[project.scripts]
-build = "build.__main__:main"
+[tool.deedum]
+title = "aesop"
+base_url = "https://mojzis.github.io"
+base_path = "/aesop/"
+description = "Fast CLI tools for agentic Python development. Each one teaches your agent how to use it."
+author = "@mojzis"
+favicon = "public/static/img/favicon.svg"
+theme_color = "#1a1d21"
+llms = true
+app = "build.aesop:Aesop"
+data = "content"
+static = "public"
+out = "site"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -56,3 +68,4 @@ exclude = ["site/**", ".venv/**", ".cache/**"]
 
 [tool.uv.sources]
 relnotes = { git = "https://github.com/mojzis/relnotes" }
+deedum = { git = "https://github.com/mojzis/deedum" }

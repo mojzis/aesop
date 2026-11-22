@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="hero">
-  <h1>{{ site.tagline }}</h1>
-  <p class="alt">{{ site.tagline_alt }}</p>
+  <h1>{{ aesop.tagline }}</h1>
+  <p class="alt">{{ aesop.tagline_alt }}</p>
   <div class="pitch">
-    <p>{{ site.pitch }}:</p>
+    <p>{{ aesop.pitch }}:</p>
     {% set cmd = "uvx <tool>@latest guide" %}{% set label = none %}{% set primary = true %}
     {% include "_cmd.html" %}
-    <p class="muted small">Every tool ships a <code>guide</code> subcommand written for agents. Point yours at it and get out of the way. <a href="{{ site.base_url }}/guide/">Why, and how to add one to your CLI →</a></p>
-    <p class="small setup-link">Want all of them? <a href="{{ site.base_url }}/setup/">One prompt wires the whole toolbox →</a></p>
+    <p class="muted small">Every tool ships a <code>guide</code> subcommand written for agents. Point yours at it and get out of the way. <a href="{{ url('guide/') }}">Why, and how to add one to your CLI →</a></p>
+    <p class="small setup-link">Want all of them? <a href="{{ url('setup/') }}">One prompt wires the whole toolbox →</a></p>
   </div>
 </section>
 
@@ -18,18 +18,18 @@
   <ul class="news-list">
     {% for n in latest %}{% include "_news_item.html" %}{% endfor %}
   </ul>
-  <a class="small" href="{{ site.base_url }}/news/">All release notes →</a>
+  <a class="small" href="{{ url('news/') }}">All release notes →</a>
 </section>
 {% endif %}
 
 <section id="tools">
-  {% for key, label in site.categories.items() %}
+  {% for key, label in aesop.categories.items() %}
   {% if by_category[key] %}
   <h2 class="category">{{ label }}</h2>
   <div class="grid">
     {% for t in by_category[key] %}
-    <a class="card" href="{{ site.base_url }}{{ t.href }}" style="--accent: {{ t.accent }}">
-      <img class="mascot" src="{{ site.base_url }}{{ t.mascot_path }}" alt="{{ t.animal }}" width="96" height="96" loading="lazy">
+    <a class="card" href="{{ url(t.href) }}" style="--accent: {{ t.accent }}">
+      <img class="mascot" src="{{ url(t.mascot_path) }}" alt="{{ t.animal }}" width="96" height="96" loading="lazy">
       <div class="card-body">
         <h3>{{ t.name }} <span class="animal">{{ t.animal }}</span></h3>
         <p>{{ t.tagline }}</p>

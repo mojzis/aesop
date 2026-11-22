@@ -1,18 +1,20 @@
 # aesop
 
-Tools showcase site for the agentic-Python menagerie. Python + Jinja2, deployed to GitHub Pages.
+Tools showcase site for the agentic-Python menagerie. Built with
+[deedum](https://github.com/mojzis/deedum), deployed to GitHub Pages.
 
 ```
 uv sync
-BASE_URL= uv run build  # -> site/ (empty BASE_URL = root-relative links for local preview)
-python -m http.server -d site 8000
+uv run deedum build --check   # -> site/
+uv run deedum serve           # http://localhost:8000, rebuilds on change
 ```
 
-- `content/site.yaml` — umbrella copy, categories, `base_url`
+- `pyproject.toml` `[tool.deedum]` — title, description, `base_url` + `base_path`, favicon
+- `content/site.yaml` — umbrella copy, categories, nav pages
 - `content/tools.yaml` — one entry per tool (copy, links, accent, mascot)
-- `templates/` — Jinja2 templates
-- `static/` — CSS/JS, copied verbatim
-- `build/` — generator
+- `templates/` — Jinja2 templates (deedum writes the `<head>` tags)
+- `public/` — copied verbatim; `public/static/` → `/static/`
+- `build/aesop.py` — the `deedum.App` subclass that turns the YAML into pages
 
 Deploy: push to `main`; `.github/workflows/deploy.yml` builds and publishes.
 In repo settings → Pages, set source to **GitHub Actions**.
