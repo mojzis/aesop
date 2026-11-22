@@ -69,6 +69,7 @@
   category: guardrails
   links:
     repo: https://github.com/mojzis/zorilla
+    docs: https://mojzis.github.io/zorilla/
     pypi: https://pypi.org/project/zorilla/
   order: 40
 
