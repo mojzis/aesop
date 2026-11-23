@@ -5,3 +5,4 @@ __pycache__/
 .ruff_cache/
 .cache/
 content/news.json
+content/versions.json

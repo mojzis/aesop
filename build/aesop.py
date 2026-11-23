@@ -128,6 +128,29 @@ def news_md(site: dict, news: list[NewsItem], tools: dict[str, Tool]) -> str:
     return "\n".join(lines) + "\n"
 
 
+VERSIONS_FILE = CONTENT / "versions.json"
+
+
+def load_versions(path: Path = VERSIONS_FILE) -> dict[str, dict[str, str]]:
+    """Tool id -> newest release tag and its date; empty when `build.news` has not run."""
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def versions_md(site: dict, tools: list[Tool], versions: dict[str, dict[str, str]]) -> str:
+    """A definition list (Markdown Extra syntax): tool, then `: version (date)`."""
+    lines = ["# Current versions", "", "The newest release tag of every aesop tool.", ""]
+    for t in tools:
+        v = versions.get(t.id)
+        lines += [
+            f"[{t.name}]({site['base_url']}{t.href})",
+            f": {v['version']} ({v['released']})" if v else ": not released yet",
+            "",
+        ]
+    return "\n".join(lines)
+
+
 def load_yaml(name: str) -> Any:
     return yaml.safe_load((CONTENT / name).read_text(encoding="utf-8"))
 
@@ -210,6 +233,7 @@ def index_md(site: dict, tools: list[Tool], full: bool = False) -> str:
         f"- [The guide principle, and a prompt to add `guide` to any CLI]"
         f"({site['base_url']}/guide/index.md)",
         f"- [What changed: release notes of every tool]({site['base_url']}/news/index.md)",
+        f"- [Current versions of every tool]({site['base_url']}/versions/index.md)",
         f"- [Everything in one file]({site['base_url']}/llms-full.txt)",
         f"- [Author](https://github.com/mojzis): {site['author']}",
         "",
@@ -233,6 +257,7 @@ class Aesop(deedum.App):
         }
         self.tools = load_tools(self.data["tools"])
         self.news = load_news()
+        self.versions = load_versions()
 
     def tool_news(self, tool: Tool) -> list[NewsItem]:
         return [n for n in self.news if n.tool == tool.id][:LATEST]
@@ -309,7 +334,10 @@ class Aesop(deedum.App):
         }
 
     def after_build(self, out: Path) -> None:
-        """Replace deedum's generic llms files with the curated ones."""
+        """Replace deedum's generic llms files with the curated ones; add versions/index.md."""
         (out / "llms.txt").write_text(index_md(self.copy, self.tools), encoding="utf-8")
         full = index_md(self.copy, self.tools, full=True)
         (out / "llms-full.txt").write_text(full, encoding="utf-8")
+        (out / "versions").mkdir(exist_ok=True)
+        md = versions_md(self.copy, self.tools, self.versions)
+        (out / "versions" / "index.md").write_text(md, encoding="utf-8")
