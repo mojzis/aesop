@@ -112,10 +112,10 @@ def test_full_build_writes_pages_markdown_siblings_and_curated_llms(tmp_path):
     assert check_folder(out, "/aesop/").errors == 0
 
 
-def test_versions_md_lists_every_tool_with_a_dash_when_unreleased():
+def test_versions_md_lists_every_tool_as_a_definition():
     other = replace(BASE, id="zorilla", name="zorilla")
     md = versions_md(
         SITE, [BASE, other], {"biston": {"version": "v0.7.8", "released": "2026-11-20"}}
     )
-    assert "| [biston](https://x/biston/) | v0.7.8 | 2026-11-20 |" in md
-    assert "| [zorilla](https://x/zorilla/) | – | – |" in md
+    assert "[biston](https://x/biston/)\n: v0.7.8 (2026-11-20)\n" in md
+    assert "[zorilla](https://x/zorilla/)\n: not released yet\n" in md

@@ -139,21 +139,16 @@ def load_versions(path: Path = VERSIONS_FILE) -> dict[str, dict[str, str]]:
 
 
 def versions_md(site: dict, tools: list[Tool], versions: dict[str, dict[str, str]]) -> str:
-    lines = [
-        "# Current versions",
-        "",
-        "The newest release tag of every aesop tool.",
-        "",
-        "| tool | version | released |",
-        "| --- | --- | --- |",
-    ]
+    """A definition list (Markdown Extra syntax): tool, then `: version (date)`."""
+    lines = ["# Current versions", "", "The newest release tag of every aesop tool.", ""]
     for t in tools:
         v = versions.get(t.id)
-        name = f"[{t.name}]({site['base_url']}{t.href})"
-        lines.append(
-            f"| {name} | {v['version']} | {v['released']} |" if v else f"| {name} | – | – |"
-        )
-    return "\n".join(lines) + "\n"
+        lines += [
+            f"[{t.name}]({site['base_url']}{t.href})",
+            f": {v['version']} ({v['released']})" if v else ": not released yet",
+            "",
+        ]
+    return "\n".join(lines)
 
 
 def load_yaml(name: str) -> Any:
